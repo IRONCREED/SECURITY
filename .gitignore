@@ -1,0 +1,11 @@
+/vendor/
+/node_modules/
+/build/
+/dist/
+/coverage/
+/.phpunit.cache/
+/.phpcs-cache
+*.log
+*.zip
+.DS_Store
+Thumbs.db

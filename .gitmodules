@@ -1,0 +1,6 @@
+[submodule ".licensing-policy"]
+	path = .licensing-policy
+	url = https://github.com/FOP-Oksana-Dubinetska/repository-licensing-policy.git
+[submodule "code-constitution"]
+	path = code-constitution
+	url = https://github.com/FOP-Oksana-Dubinetska/code-constitution.git

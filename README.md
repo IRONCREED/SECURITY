@@ -20,9 +20,10 @@ reviewers and users can inspect the maintained source and build process.
 | IRONCREED Request Log | `ironcreed-request-log` | `security` | Specification |
 
 IRONCREED Request Log will show concrete request records and URIs in WordPress
-administration. Its first release observes requests that reach the WordPress
-runtime. Requests answered by a CDN, web-server cache, static-file handler,
-firewall, or an earlier failure remain outside WordPress visibility.
+administration. Its first release includes a disabled-by-default WordPress
+Runtime Source and an optional Hosting Ukraine API provider for authoritative
+nginx access logs. The interface keeps the sources separate and states the
+visibility boundary of each one.
 
 ## Repository map
 
@@ -50,6 +51,9 @@ Read `CONSTITUTION.md`, `governance/PROFILE.md`, and
 `governance/legislation/WORDPRESS_PLUGIN_DEVELOPMENT.md` before implementation.
 Official WordPress.org rules and WordPress Coding Standards are mandatory
 external constraints for distributable code.
+
+The current Hosting Ukraine service, privacy, and applicable-law review is
+recorded in `docs/EXTERNAL-SERVICE-AND-PRIVACY-REVIEW.md`.
 
 ## Licensing
 

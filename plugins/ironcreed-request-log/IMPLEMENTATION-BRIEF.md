@@ -2,7 +2,7 @@
 
 Идентификатор: `ics-brief-request-log-001`.
 
-Редакция: `0.1.0`.
+Редакция: `0.2.0`.
 
 Статус: `approved-for-implementation`.
 
@@ -23,17 +23,24 @@
 
 Создайте плагин `IRONCREED Request Log` со slug
 `ironcreed-request-log`. Администратор открывает `Tools → Request Log` и видит
-конкретные HTTP-запросы, достигшие WordPress: время, метод, очищенный URI,
-HTTP-статус, длительность, тип маршрута и источник наблюдения.
+раздельные журналы двух источников:
+
+- `WordPress Runtime` — запросы, при обработке которых загрузился WordPress;
+- `Hosting Ukraine` — nginx access logs, полученные по официальному API.
+
+Каждая запись содержит доступные для её источника поля и ясную маркировку
+источника. WordPress-журнал сохраняет время, метод, очищенный URI, HTTP-статус,
+длительность и тип маршрута. Hosting Ukraine добавляет серверные поля,
+фактически возвращаемые provider.
 
 Плагин решает просмотр отдельных запросов и URI. Сводные графики, посещаемость,
 SEO-аналитика, firewall, блокировка ботов, rate limiting, error log, request
 body inspector и monitoring dashboard в 1.0 не входят.
 
-Постоянно отображайте источник `WordPress runtime` и границу: журнал содержит
-только запросы, при обработке которых загрузился WordPress. Запросы,
-завершённые в CDN, WAF, веб-сервере, full-page cache, static handler либо до
-WordPress, отсутствуют.
+На каждой вкладке постоянно отображайте границу источника. `WordPress Runtime` не видит
+запросы, завершённые в CDN, WAF, веб-сервере, full-page cache, static handler либо до
+WordPress. `Hosting Ukraine` показывает набор и период, которые возвратил API; он не обещает
+запросы, отбитые вне контура журна провайдера.
 
 ## 2. Идентичность
 
@@ -91,16 +98,18 @@ plugins/ironcreed-request-log/
 `ABSPATH` guard, Product ID metadata, bootstrap guard и composition root.
 Доменное поведение в главном файле не размещайте.
 
-## 4. Наблюдение
+## 4. Источники
 
 ### 4.1. Выключенное состояние
 
-После установки журналирование выключено. Экран показывает назначение, поля,
-границу, default retention и кнопку включения. Включение требует
-`manage_ironcreed_request_log` и nonce. Пока запись выключена, event rows не
-создаются.
+После установки WordPress observer выключен, а внешние connections отсутствуют.
+Активация плагина не записывает events и не выполняет HTTP-запросы.
 
-### 4.2. Начало и завершение
+Экран показывает оба режима, их поля, границы, нагрузку, retention, удаление и
+приватность до включения или подключения. Каждое действие требует
+`manage_ironcreed_request_log` и nonce.
+
+### 4.2. WordPress Runtime Source
 
 На раннем применимом hook создайте immutable draft observation с монотонным
 временем. На `shutdown` получите status и duration, выполните redaction и один
@@ -110,7 +119,25 @@ bounded insert. Ошибка журнала не меняет status, body ил�
 front-end, REST, AJAX, Cron, XML-RPC, login и admin без сохранения тела или
 авторизационных данных.
 
-### 4.3. Поля 1.0
+### 4.3. Hosting Ukraine API Source
+
+Реализуйте provider interface и `HostingUkraineApiProvider` как первый адаптер. Он
+использует официальный метод `hosting/log/web/nginx` и остаётся read-only по
+отношению к хостингу:
+
+- API: <https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx>;
+- описание access log: <https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/>.
+
+Перед кодом сверьте точные endpoint, method, authentication, параметры сайта и даты,
+формат и limits ответа с актуальной аутентифицированной документацией. Не
+угадывайте схему по примерам. Зафиксируйте проверенный contract в коде, tests и
+публичной документации без реального token.
+
+Сетевой вызов появляется только после явного `Test connection` или `Fetch logs`. В 1.0
+отсутствуют фоновая синхронизация, live tail, планировщик и webhook. HTTP client подменяется
+в tests. Endpoint и host зафиксированы в adapter и не вводятся в UI.
+
+### 4.4. Поля 1.0
 
 | Поле | Требование |
 | --- | --- |
@@ -120,13 +147,18 @@ front-end, REST, AJAX, Cron, XML-RPC, login и admin без сохранения
 | Path | Нормализованный path с ограничением длины |
 | Query | Строка после redaction и ограничения |
 | Status | Integer 100–599 либо безопасный unknown |
-| Duration | Неотрицательное ограниченное число миллисекунд |
-| Route kind | Закрытый enum |
-| Source | `wordpress-runtime` |
+| Duration | Только WordPress; неотрицательное ограниченное число миллисекунд |
+| Route kind | Только WordPress; закрытый enum |
+| Response bytes | Только provider, если возвращается API |
+| Client IP | Только provider; потенциальные персональные данные |
+| User-Agent | Только provider; ограниченная длина |
+| Referer | Только provider; нормализация, redaction и ограниченная длина |
+| Source | `wordpress-runtime` или `hosting-ukraine-nginx` |
 
-Не добавляйте IP, User-Agent, Referer, cookies, request/response bodies, headers,
-user ID, session ID или произвольный context blob. Изменение требует новой
-product/privacy редакции.
+WordPress source не добавляет IP, User-Agent и Referer. Provider source может их
+получать и сохранять только после явного disclosure перед `Fetch logs`. Ни один
+источник не сохраняет cookies, request/response bodies, authorization headers,
+API tokens, user ID, session ID или произвольный context blob.
 
 ## 5. URI и redaction
 
@@ -147,7 +179,7 @@ Filter может добавлять ключи и не может ослаби�
 ## 6. Storage и lifecycle
 
 Создайте отдельную таблицу через поддерживаемый WordPress migration pattern.
-Добавьте индексы времени, status, method и route kind. Не индексируйте полный
+Добавьте индексы времени, source, status, method и route kind. Не индексируйте полный
 URI без доказанной необходимости.
 
 Default retention — 24 часа; диапазон — 1 час–30 дней. Default hard cap —
@@ -157,8 +189,16 @@ Default retention — 24 часа; диапазон — 1 час–30 дней. 
 `COUNT(*)` и полный cleanup в каждом запросе. Храните schema version и
 выполняйте идемпотентные migrations.
 
-Deactivation снимает observer и scheduled event, сохраняя данные. Uninstall
-удаляет table, options, capabilities и events. До первой стабильной версии
+Provider import применяет ту же retention и hard cap, дедуплицирует повторную ручную
+загрузку одного диапазона и выполняет redaction до insert. Частичный import либо откатывается
+транзакционно, либо получает явный resumable cursor; молчаливая двойная запись запрещена.
+
+Credentials храните в отдельной option с `autoload=false`. После сохранения token не
+возвращается в HTML. Disconnect удаляет credentials, но оставляет импортированные
+записи до их retention или ручной очистки; UI прямо объясняет это перед disconnect.
+
+Deactivation снимает observer и scheduled event, сохраняя данные и connection.
+Uninstall удаляет table, options, credentials, capabilities и events. До первой стабильной версии
 default uninstall behavior — полное удаление.
 
 ## 7. Полномочия
@@ -168,20 +208,26 @@ default uninstall behavior — полное удаление.
 cross-site viewer в 1.0 отсутствует.
 
 Проверяйте view capability до запроса журнала. Проверяйте manage capability и
-nonce до включения, выключения, изменения retention и очистки.
+nonce до включения, выключения, добавления, проверки и удаления connection,
+ручного `Fetch logs`, изменения retention и очистки.
 
 ## 8. Интерфейс
 
 Создайте страницы `Request Log` и `Settings` на native WordPress admin UI. CSS
 и JavaScript загружаются только на страницах плагина.
 
+`Request Log` содержит отдельные вкладки `WordPress Runtime` и `Hosting Ukraine`. Вкладка
+Hosting Ukraine видна до подключения и показывает пустое состояние со ссылкой на
+`Settings → Connections`. Общая вкладка `All` допустима только как простая проекция над
+тем же repository без второго storage и без скрытия source.
+
 Основной экран содержит:
 
-- status записи и badge `Source: WordPress runtime`;
+- status и badge текущего source;
 - постоянное объяснение границы;
-- ручное обновление;
-- фильтры времени, метода, status class, route kind и path substring;
-- пагинированную таблицу времени, method, URI, status, duration и route;
+- ручное обновление для WordPress и `Fetch logs` с диапазоном для Hosting Ukraine;
+- фильтры времени, метода, status class, path substring и доступных для source полей;
+- пагинированную таблицу с общими колонками и source-specific details;
 - ясное пустое состояние;
 - отдельную очистку с подтверждением.
 
@@ -192,8 +238,18 @@ Auto-refresh и export отсутствуют.
 Не опирайтесь на private WordPress API. Если `WP_List_Table` остаётся private в
 минимальной версии, создайте небольшую доступную таблицу на public APIs.
 
-Settings содержит enable/disable, retention и hard cap. Server log path, export
-и telemetry отсутствуют.
+Settings содержит блоки `Sources`, `Connections` и `Privacy and retention`.
+
+`Sources` показывает встроенный WordPress Runtime с enable/disable и его границей.
+`Connections` содержит выпадающий список `Add connection`; в 1.0 в нём есть только
+`Hosting Ukraine API`. Выбор открывает краткую форму с полями, подтверждёнными по
+актуальной API-документации. Форма описывает внешний сервис, данные, условия,
+приватность и риск token до сохранения. Кнопки: `Test connection`, `Save connection`,
+`Disconnect`. Сохранённый token не показывается; поле позволяет только заменить его.
+
+`Privacy and retention` содержит retention, hard cap, source-specific поля, кнопки очистки и
+ссылку на Privacy Policy Guide. Server log path, export, telemetry, auto-refresh и фоновая
+синхронизация отсутствуют.
 
 ## 9. Suite Protocol
 
@@ -221,12 +277,24 @@ plugin basenames и предложите оставить одну копию. �
 
 ## 11. Приватность
 
-Добавьте текст в Privacy Policy Guide: запись выключена по умолчанию, поля,
-возможное наличие идентификаторов в URI, место, доступ, retention и deletion.
+Считайте IP, URI с идентификаторами, User-Agent и Referer потенциальными персональными
+данными. Получение, парсинг, фильтрация, хранение, показ и удаление являются обработкой.
+Плагин не выбирает за владельца сайта правовое основание и не обещает compliance.
 
-Проведите review personal-data exporter/eraser. Если redacted URI всё ещё
-связывается с субъектом, реализуйте public Privacy APIs либо зафиксируйте точное
-основание решения. Фраза «IP не записывается» недостаточна.
+Добавьте текст в Privacy Policy Guide через `wp_add_privacy_policy_content`. Он отдельно
+описывает:
+
+- выключенные по умолчанию WordPress observer и Hosting Ukraine connection;
+- цель, поля, границу, локальное место, доступ, retention, clear, disconnect и uninstall;
+- Hosting Ukraine как внешний сервис, триггер запроса, передаваемые credentials и
+  параметры, получаемые log fields и ссылки на его Terms of Service и Privacy Policy;
+- точное утверждение, что плагин не отправляет полученные logs в IRONCREED или иной сервис.
+
+Проведите review WordPress personal-data exporter/eraser для обоих источников. Привязка
+журнала к email может отсутствовать; это не разрешает молча пропустить review. Реализуйте
+public Privacy APIs там, где они корректно находят записи; для остального зафиксируйте точное
+основание и предоставьте администратору source-specific clear и фильтры. Фраза «это технический
+журнал» не отменяет обработку персональных данных.
 
 ## 12. Ошибки
 
@@ -258,17 +326,18 @@ release ZIP из allowlist. CI использует `composer install`.
 2. WordPress Coding Standards: zero errors;
 3. PHPCompatibilityWP для PHP 8.0+;
 4. domain/redaction/normalization/classification unit tests;
-5. integration tests observer, storage, capabilities, nonces, settings, Cron,
-   migrations и uninstall;
+5. integration tests observer, provider, mock HTTP client, storage, capabilities,
+   nonces, settings, Cron, migrations и uninstall;
 6. Multisite tests;
 7. duplicate-instance и Suite Protocol tests;
 8. negative-security fixtures;
 9. reproducible package и content assertion;
 10. Plugin Check `Plugin repo` на пакете.
 
-Проверьте XSS в path/query, encoded separators, invalid UTF-8, control
-characters, query bombs, repeated sensitive keys, SQL metacharacters, forged
-nonce, missing capability, malformed descriptor и две копии.
+Проверьте XSS в path/query/provider fields, encoded separators, invalid UTF-8,
+control characters, query bombs, repeated sensitive keys, SQL metacharacters,
+forged nonce, missing capability, malformed descriptor, SSRF attempt, cross-host
+redirect, timeout, oversized/malformed response, token leakage и две копии.
 
 ## 15. Ручная проверка
 
@@ -277,6 +346,11 @@ default; enable; front-end/REST/AJAX/admin/login/404 requests; filters;
 pagination; sensitive-query redaction; clear; deactivate/reactivate; uninstall
 с удалением.
 
+Без реальных credentials проверьте пустую Hosting Ukraine вкладку, форму connection,
+маскирование token и все mock success/error states. Реальный smoke test с тестовым аккаунтом
+выполняется только вне CI, не печатает token и не сохраняет полученные logs в
+репозитории либо отчёте.
+
 Повторите применимое на Multisite. Проверьте keyboard-only, screen-reader labels,
 narrow viewport, английский UI и одну реальную локализацию. Включите `WP_DEBUG`
 и `SCRIPT_DEBUG`.
@@ -284,11 +358,14 @@ narrow viewport, английский UI и одну реальную локал
 ## 16. Readme
 
 `readme.txt` пишет простым английским. Short description ≤150 characters; tags
-≤5. Опишите WordPress runtime boundary в Description и FAQ. Не обещайте полный
-server access log, безопасность, compliance либо обнаружение всех ботов.
+≤5. Опишите обе границы в Description и FAQ. Не обещайте полную видимость,
+безопасность, compliance либо обнаружение всех ботов.
 
-Опишите installation, enablement, fields, retention, clear, Multisite,
-uninstall, отсутствие telemetry, support и privacy. Ссылка на GitHub ведёт к
+Добавьте отдельный раздел `External services`. Назовите Hosting Ukraine, опишите когда
+и зачем плагин обращается к нему, что отправляет и получает, и дайте прямые ссылки
+на API docs, Terms of Service и Privacy Policy. Опишите installation, enablement,
+connection, fields, retention, clear, disconnect, Multisite, uninstall, отсутствие telemetry,
+support и privacy. Ссылка на GitHub ведёт к
 public maintained source. Version и Stable tag совпадают; stable `trunk`
 запрещён.
 
@@ -298,10 +375,11 @@ public maintained source. Version и Stable tag совпадают; stable `trun
 2. Immutable domain types, normalization, redaction и tests.
 3. Storage schema, repository, migrations, retention и tests.
 4. Observer и request classification.
-5. Capabilities, settings и admin viewer.
-6. Suite Protocol и duplicate-instance guard.
-7. Privacy, uninstall, i18n и accessibility.
-8. Package builder, Plugin Check, release evidence и manual smoke test.
+5. Provider port, Hosting Ukraine adapter, mock HTTP tests и parser.
+6. Capabilities, connections, settings, source tabs и admin viewer.
+7. Suite Protocol и duplicate-instance guard.
+8. Privacy, external-service disclosure, uninstall, i18n и accessibility.
+9. Package builder, Plugin Check, release evidence и manual smoke test.
 
 После каждого milestone запускайте применимые checks. Не переносите security,
 privacy, tests и packaging в неопределённый последний проход.
@@ -312,26 +390,24 @@ privacy, tests и packaging в неопределённый последний �
 
 - reproducible ZIP устанавливается без другого IRONCREED-плагина;
 - запись выключена и включается только уполномоченным действием;
-- concrete requests имеют method, redacted URI, status, duration, route/source;
-- граница наблюдения постоянно видима;
+- внешний запрос отсутствует до connection и ручного действия;
+- concrete requests имеют method, redacted URI, status и source-specific fields;
+- source и его граница постоянно видимы;
 - retention, cap, cleanup, clear и uninstall доказаны;
-- capability, nonce, SQL, escaping, XSS и duplicate copy доказаны;
+- capability, nonce, SQL, escaping, XSS, provider failures, credential secrecy и
+  duplicate copy доказаны;
 - standalone и grouped menu соответствуют Suite Protocol;
 - WPCS, PHPCompatibilityWP, tests и Plugin Check проходят;
 - ZIP содержит только разрешённые GPL-совместимые файлы;
 - readme, privacy, changelog и security/support готовы к review;
 - release report связывает source commit, tools, checks и ZIP hash.
 
-## 19. Отложенный Server Access Log Source
+## 19. Отложенные providers
 
-После принятия 1.0 и отдельного security review может появиться server-log
-adapter. Сохраните application port, только если это не усложняет 1.0, но не
-добавляйте file code, path setting и UI в первый пакет.
-
-Будущий adapter принимает только trusted configured paths, соблюдает
-`open_basedir`, читает bounded tail без shell, не изменяет файл, redacts IP и
-query по умолчанию и маркирует source `server-access-log`. Его выпуск требует
-нового задания и privacy/release review.
+В 1.0 не добавляйте `LocalFileProvider`, cPanel, Plesk, другие хостинги или общий
+конструктор provider. Новый adapter добавляется по отдельному запросу пользователей и
+проходит свой terms, security, privacy, UI и release review. Он реализует тот же application
+port без внесения provider-specific branches в домен.
 
 ## 20. Передача результата
 

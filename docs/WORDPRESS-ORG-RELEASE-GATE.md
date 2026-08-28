@@ -18,6 +18,19 @@ decision of the WordPress.org Plugins Team.
   <https://developer.wordpress.org/coding-standards/>
 - Official Plugin Check:
   <https://wordpress.org/plugins/plugin-check/>
+- WordPress Plugin Handbook privacy guidance:
+  <https://developer.wordpress.org/plugins/privacy/>
+- Hosting Ukraine access-log documentation and API method:
+  <https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/>
+  and <https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx>
+- Hosting Ukraine public offer, terms, and privacy policy:
+  <https://www.ukraine.com.ua/legal/publicoffer/>,
+  <https://www.ukraine.com.ua/legal/tos/>, and
+  <https://www.ukraine.com.ua/legal/privacypolicy/>
+- Law of Ukraine "On Personal Data Protection":
+  <https://zakon.rada.gov.ua/laws/show/2297-17>
+- EU General Data Protection Regulation, when applicable:
+  <https://eur-lex.europa.eu/eli/reg/2016/679/oj>
 
 Review these sources again before submission because the external order can
 change independently of this repository.
@@ -53,7 +66,15 @@ change independently of this repository.
 - No trialware, hidden premium code, alternate executable delivery, or
   alternate updater is present.
 - No telemetry, remote contact, or tracking occurs without informed consent.
-  Version 1.0 of IRONCREED Request Log has none.
+  Activation alone performs no remote request. The Hosting Ukraine provider is
+  contacted only after an authorized administrator configures it and explicitly
+  starts a connection test or log fetch.
+- The external service provides substantive hosting-log functionality and is
+  named in `readme.txt`, with its purpose, transmitted and received data, API
+  documentation, Terms of Service, and Privacy Policy.
+- The release evidence records a fresh review of the authenticated API contract
+  and provider terms. A missing public API license or ambiguous permission for a
+  third-party client is resolved with the provider before submission.
 - No front-end credit, external asset, advertisement, review pressure, or
   persistent dashboard hijacking is present.
 - WordPress-bundled libraries are reused instead of copied.
@@ -72,6 +93,18 @@ change independently of this repository.
 - Retention, erasure, uninstall, and Multisite behavior are documented.
 - Bodies, cookies, authorization headers, passwords, nonces, tokens, secrets,
   and unredacted sensitive query values are never recorded.
+- IP addresses, URIs containing identifiers, User-Agent, and Referer values from
+  the provider are treated as potentially personal data throughout parsing,
+  storage, display, testing, deletion, and documentation.
+- Provider credentials are stored separately with autoload disabled, are never
+  returned to HTML after saving, and are absent from URLs, logs, errors, Site
+  Health, exports, fixtures, CI output, and release evidence.
+- Privacy Policy Guide content identifies both sources, data fields, purposes,
+  access, retention, deletion, and the Hosting Ukraine external-service flow.
+- Personal-data exporter and eraser behavior is reviewed for both sources. Any
+  decision not to register a callback states why the WordPress email-keyed API
+  cannot correctly locate the records and identifies the available deletion
+  controls.
 
 ## Quality gate
 
@@ -97,6 +130,8 @@ change independently of this repository.
   present.
 - Installed ZIP activation, configuration, observation, deletion, and
   uninstall are tested on a fresh site.
+- The package includes the external-service disclosure and no real token,
+  provider response, access log, account identifier, or host-specific fixture.
 - Package checksum and source Git commit are recorded in the release report.
 
 ## Submission and maintenance gate
@@ -105,6 +140,9 @@ change independently of this repository.
 - The WordPress.org account email is current and monitored by a person.
 - Review correspondence is answered with exact corrections and a new package
   only after requested changes are complete.
+- The release report links the exact provider documentation and terms reviewed,
+  states the request/response contract verified in the authenticated API, and
+  records a secret-free smoke-test result.
 - After approval, WordPress.org SVN is a release repository. Only coherent
   candidates are committed with descriptive messages and matching tags.
 - Security reports, support topics, new WordPress releases, and policy changes

@@ -2,7 +2,7 @@
 
 Идентификатор: `ics-act-wordpress-development-001`.
 
-Редакция: `0.1.0`.
+Редакция: `0.2.0`.
 
 Дата принятия: 2026-08-28.
 
@@ -40,6 +40,12 @@ remote service, alternate updater, remote executable code, trialware, tracking
 
 Плагин к моменту подачи является полным и пригодным к установке. Пустой каркас,
 зарезервированное имя либо обещание будущей функции не подаются.
+
+Интерфейс к внешнему сервису допустим, когда сервис предоставляет самостоятельную
+функцию. `readme.txt` называет сервис, описывает назначение обращения, данные в обоих
+направлениях и ссылается на действующие Terms of Use и Privacy Policy. Активация плагина не
+создаёт opt-in: связь возникает после явной настройки и действия уполномоченного администратора.
+Плагин не обещает юридическую compliance.
 
 ## 2. Граница продукта и пакета
 
@@ -93,6 +99,19 @@ chain риском и основанием превосходства над м�
 1.0 первого плагина использует только WordPress Core и PHP. Development
 dependencies закрепляются lockfile и не попадают в ZIP.
 
+### ICS-WP-A04. Внешний provider
+
+Каждый provider реализует один прикладной port и преобразует ответ в общую проверенную
+модель. Endpoint и host задаются кодом провайдера, а не администратором. Сетевой adapter
+использует WordPress HTTP API, HTTPS certificate verification, bounded timeout,
+ограничение redirects и объёма ответа. Ответ, log line и remote error всегда считаются
+недоверенными.
+
+В версии 1.0 учреждён только `HostingUkraineApiProvider` с методом
+`hosting/log/web/nginx`. Точная схема запроса и ответа сверяется с актуальной
+аутентифицированной документацией API перед реализацией и релизом. Provider
+подменяется mock HTTP client в тестах.
+
 ## 4. Безопасность
 
 ### ICS-WP-S01. Полномочие до действия
@@ -133,6 +152,18 @@ Product ID неизменен. Activation guard отклоняет вторую 
 объявление symbols. Сообщение называет обе копии и безопасное действие;
 автоматическая деактивация другой копии запрещена.
 
+### ICS-WP-S05. Учётные данные provider
+
+Добавление, проверка и удаление credentials требуют manage capability и nonce. API token
+передаётся только способом, установленным документацией provider, и никогда в query
+URL. Option с credentials не autoload. Поле после сохранения не возвращает secret в HTML;
+новое значение либо заменяет его, либо оставляет без изменения.
+
+Token не попадает в event table, log, URL, exception, admin notice, Site Health,
+Privacy export, diagnostic bundle, fixture или отчёт. Disconnect и uninstall удаляют его. UI
+предупреждает, что token может иметь более широкие права у провайдера, и не обещает
+least privilege, пока scope токена не проверен по актуальной документации.
+
 ## 5. Приватность и данные
 
 ### ICS-WP-D01. Минимизация
@@ -142,8 +173,11 @@ Product ID неизменен. Activation guard отклоняет вторую 
 содержит обязательный минимум и расширяется filter без возможности ослабить
 его.
 
-Опциональное поле требует явного включения и документации цели. Telemetry и
-внешняя передача отсутствуют в первом плагине.
+Опциональное поле требует явного включения и документации цели. IP, URI,
+User-Agent, Referer и связанные online identifiers считаются потенциальными
+персональными данными. Telemetry отсутствует. Внешняя связь ограничена
+выбранным Hosting Ukraine API: плагин передаёт аутентификационные данные и только
+необходимые параметры запроса, а журнал получает от этого же provider.
 
 ### ICS-WP-D02. Ограниченность
 
@@ -162,6 +196,15 @@ Activation, upgrade, deactivation и uninstall имеют отдельные tes
 когда схема содержит данные, связываемые с субъектом. Отсутствие IP не отменяет
 review URI и query.
 
+### ICS-WP-D04. Внешний сервис и правовая граница
+
+Privacy Policy Guide и `readme.txt` называют Hosting Ukraine, ссылаются на
+официальную API-документацию, Terms of Service и Privacy Policy, описывают триггер
+запроса, передаваемые и получаемые поля, локальное хранение, retention, доступ,
+disconnect и deletion. Администратор сайта определяет применимое правовое основание,
+срок и содержание privacy notice. Плагин предоставляет технические меры и описание,
+не выбирая за оператора правовое основание и не гарантируя compliance.
+
 ## 6. Производительность и надёжность
 
 ### ICS-WP-R01. Горячий путь
@@ -176,6 +219,10 @@ insert допускается только после явного включе�
 Список использует индексированную пагинацию, allowlisted filters и ограниченный
 page size. Auto-refresh выключен по умолчанию; ручное обновление сохраняет
 фильтры.
+
+Получение remote log запускается только ручным действием. Параметры даты и сайта
+проходят allowlist. Парсер и import ограничивают число строк, длину строки, память и время;
+частичный импорт и ошибка показываются без секретов и raw fragments.
 
 ### ICS-WP-R03. Диагностика
 
@@ -228,8 +275,8 @@ ID и регистрирует один top-level menu. Каждый участ�
 1. Composer validation и exact lockfile install;
 2. WordPress Coding Standards;
 3. PHPCompatibilityWP;
-4. unit, integration, multisite и negative-security tests;
-5. migrations, activation, deactivation, uninstall и duplicate guard;
+4. unit, integration, provider/mocked-HTTP, multisite и negative-security tests;
+5. migrations, credentials, activation, deactivation, uninstall и duplicate guard;
 6. i18n и release metadata;
 7. воспроизводимую ZIP-сборку и package allowlist;
 8. официальный Plugin Check на пакете.
@@ -239,7 +286,8 @@ ID и регистрирует один top-level menu. Каждый участ�
 ### ICS-WP-Q02. Security fixtures
 
 Fixtures включают XSS в URI/log line, SQL metacharacters, invalid UTF-8,
-oversized query, traversal, URL wrapper, symlink, неожиданный status,
+oversized query, traversal, URL wrapper, symlink, SSRF attempt, redirect на другой host,
+timeout, oversized и malformed API response, credential leak, неожиданный status,
 отсутствующее capability, неверный nonce, duplicate copy, повреждённую схему,
 Multisite boundary и отказ Cron. Они синтетические и не содержат production data.
 

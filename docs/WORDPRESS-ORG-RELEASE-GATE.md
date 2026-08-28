@@ -72,9 +72,9 @@ change independently of this repository.
 - The external service provides substantive hosting-log functionality and is
   named in `readme.txt`, with its purpose, transmitted and received data, API
   documentation, Terms of Service, and Privacy Policy.
-- The release evidence records a fresh review of the authenticated API contract
-  and provider terms. A missing public API license or ambiguous permission for a
-  third-party client is resolved with the provider before submission.
+- `docs/HOSTING-UKRAINE-API-CONTRACT.md` matches the authenticated documentation
+  reviewed for the candidate. Any provider-side contract change is reviewed before
+  release and reflected in the plugin or documented as a known limitation.
 - No front-end credit, external asset, advertisement, review pressure, or
   persistent dashboard hijacking is present.
 - WordPress-bundled libraries are reused instead of copied.

@@ -13,10 +13,10 @@ sync, live tail, export, telemetry, charts, or a companion-plugin dependency.
 
 Treat provider records as potentially personal data and provider credentials as
 secrets. Do not make a network request before an authorized administrator
-explicitly configures the connection and starts a test or fetch. Verify the
-current authenticated Hosting Ukraine API contract instead of inferring request
-fields, and document the verified external-service behavior in `readme.txt` and
-the Privacy Policy Guide.
+explicitly configures the connection and starts a test or fetch. Use
+`docs/HOSTING-UKRAINE-API-CONTRACT.md` as the exact external contract for version
+1.0. Do not infer additional request fields or response behaviour. Document the
+verified external-service behavior in `readme.txt` and the Privacy Policy Guide.
 
 Complete every acceptance check and include a release-candidate report before
 presenting the plugin as ready for WordPress.org submission.

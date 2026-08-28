@@ -2,7 +2,7 @@
 
 Идентификатор: `ics-brief-request-log-001`.
 
-Редакция: `0.2.0`.
+Редакция: `0.2.1`.
 
 Статус: `approved-for-implementation`.
 
@@ -17,7 +17,8 @@
 `governance/PROFILE.md`,
 `governance/legislation/WORDPRESS_PLUGIN_DEVELOPMENT.md`,
 `docs/IRONCREED-SUITE-PROTOCOL.md` и
-`docs/WORDPRESS-ORG-RELEASE-GATE.md`.
+`docs/WORDPRESS-ORG-RELEASE-GATE.md`. Для provider-кода также прочитайте
+`docs/HOSTING-UKRAINE-API-CONTRACT.md`.
 
 ## 1. Результат
 
@@ -88,6 +89,8 @@ plugins/ironcreed-request-log/
 │   └── suite/
 ├── assets/
 ├── languages/
+├── docs/
+│   └── HOSTING-UKRAINE-API-CONTRACT.md
 └── tests/
     ├── unit/
     ├── integration/
@@ -128,10 +131,21 @@ front-end, REST, AJAX, Cron, XML-RPC, login и admin без сохранения
 - API: <https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx>;
 - описание access log: <https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/>.
 
-Перед кодом сверьте точные endpoint, method, authentication, параметры сайта и даты,
-формат и limits ответа с актуальной аутентифицированной документацией. Не
-угадывайте схему по примерам. Зафиксируйте проверенный contract в коде, tests и
-публичной документации без реального token.
+Для v1.0 используйте только очищенный подтверждённый контракт
+`docs/HOSTING-UKRAINE-API-CONTRACT.md`. Он фиксирует endpoint, method, Bearer
+authentication, параметры, ответ `.gz`, срок действия token и известные limits.
+Не угадывайте другие request fields, JSON schema, диапазоны дат, pagination или
+редиректы.
+
+Первый выпуск запрашивает только журнал за текущий день: параметр `date` в запрос
+не передаётся, поэтому Hosting Ukraine применяет документированное значение по
+умолчанию `today`. Диапазон дат и выбор произвольной даты добавляются только после
+подтверждения их точного формата и ограничений в актуальной документации.
+
+Успешный ответ обрабатывается как ограниченный бинарный `.gz`-архив, а не как JSON.
+Неуспешный HTTP-ответ, redirect, неподдерживаемый content type, превышение лимита
+размера или ошибка распаковки завершают импорт безопасной общей ошибкой без показа
+тела ответа. Contract, код, tests и публичная документация не содержат реальный token.
 
 Сетевой вызов появляется только после явного `Test connection` или `Fetch logs`. В 1.0
 отсутствуют фоновая синхронизация, live tail, планировщик и webhook. HTTP client подменяется
@@ -225,7 +239,7 @@ Hosting Ukraine видна до подключения и показывает �
 
 - status и badge текущего source;
 - постоянное объяснение границы;
-- ручное обновление для WordPress и `Fetch logs` с диапазоном для Hosting Ukraine;
+- ручное обновление для WordPress и `Fetch today's logs` для Hosting Ukraine;
 - фильтры времени, метода, status class, path substring и доступных для source полей;
 - пагинированную таблицу с общими колонками и source-specific details;
 - ясное пустое состояние;
@@ -243,7 +257,7 @@ Settings содержит блоки `Sources`, `Connections` и `Privacy and re
 `Sources` показывает встроенный WordPress Runtime с enable/disable и его границей.
 `Connections` содержит выпадающий список `Add connection`; в 1.0 в нём есть только
 `Hosting Ukraine API`. Выбор открывает краткую форму с полями, подтверждёнными по
-актуальной API-документации. Форма описывает внешний сервис, данные, условия,
+актуальному API-контракту: `host_id` и Bearer token. Форма описывает внешний сервис, данные, условия,
 приватность и риск token до сохранения. Кнопки: `Test connection`, `Save connection`,
 `Disconnect`. Сохранённый token не показывается; поле позволяет только заменить его.
 

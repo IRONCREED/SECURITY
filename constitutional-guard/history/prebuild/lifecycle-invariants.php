@@ -1,0 +1,3 @@
+<?php
+require_once dirname( __DIR__, 2 ) . '/testing-interface/driver.php';
+Iron_Warden_Test_Driver::run_environment_boundary( 'IRON_WARDEN_MULTISITE_TEST_COMMAND' );

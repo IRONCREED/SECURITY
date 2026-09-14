@@ -1,0 +1,63 @@
+=== IRONCREED Request Log ===
+Contributors: ironcreed
+Tags: request log, security, privacy, debugging
+Requires at least: 6.5
+Requires PHP: 8.0
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Inspect bounded WordPress requests and manually fetched Hosting Ukraine nginx access logs with privacy controls.
+
+== Description ==
+
+IRONCREED Request Log offers two opt-in, clearly separated sources.
+
+* **WordPress Runtime** records requests that load WordPress. It cannot see traffic completed by a CDN, WAF, web server, full-page cache, static handler, or any layer before WordPress.
+* **Hosting Ukraine API** manually retrieves today's nginx access-log archive. It shows only records and coverage returned by the provider API.
+
+Both sources start disabled. Records use bounded retention and count limits. Sensitive query values are redacted. Runtime records omit IP addresses, User-Agent, Referer, bodies, cookies, and authorization data. Hosting Ukraine records may include IP addresses, URI identifiers, User-Agent, and Referer and must be covered by the site's privacy notice and lawful basis.
+
+The plugin has no telemetry, advertising, export, live tail, background synchronization, public endpoint, alternate updater, or local-file reader. It never sends fetched logs to IRONCREED or another service.
+
+== Installation ==
+
+1. Install and activate the ZIP in WordPress.
+2. Open Tools > Request Log. Logging remains disabled until an administrator enables WordPress Runtime.
+3. Open Tools > Request Log Settings, choose Hosting Ukraine API under Add connection, review the disclosure, and save a host ID and Bearer token.
+4. Use Test connection or Fetch today's logs. Each button is an explicit manual network action.
+
+On Multisite, each site stores and displays its own records. Uninstall removes records, settings, credentials, scheduled cleanup, and capabilities from every site. Deactivation preserves data and credentials but cancels cleanup until reactivation.
+
+== External services ==
+
+The optional Hosting Ukraine integration calls `https://adm.tools/action/hosting/log/web/nginx/` only when an authorized administrator explicitly tests a connection or fetches today's log. The request sends the saved Bearer token in the Authorization header and the Hosting Ukraine host ID in the request body. The response is a gzip nginx access-log archive that may contain timestamps, IP addresses, methods, URIs, statuses, response sizes, User-Agent values, and Referer values. Imported records are retained in the local WordPress database. Disconnect deletes credentials and leaves imported records until retention expiry or manual clearing.
+
+Review the [API method](https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx), [access-log documentation](https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/), [Terms of Service](https://www.ukraine.com.ua/legal/tos/), [public offer](https://www.ukraine.com.ua/legal/publicoffer/), and [Privacy Policy](https://www.ukraine.com.ua/legal/privacypolicy/) before connecting.
+
+== Frequently Asked Questions ==
+
+= Is WordPress Runtime a complete server access log? =
+
+No. It records requests only after WordPress loads.
+
+= Does Hosting Ukraine change my server? =
+
+No. The provider adapter downloads the current day's nginx log and remains read-only with respect to hosting configuration.
+
+= When does the plugin make network requests? =
+
+Only after an administrator saves a connection and explicitly starts a connection test or a log fetch. There are no scheduled provider calls.
+
+= Does the WordPress personal-data exporter identify records by email? =
+
+The plugin does not register an exporter or eraser because records have no reliable WordPress-user identity and an email-keyed lookup cannot correctly identify all related URI, IP, User-Agent, or Referer values. Administrators can filter and clear records by source, and uninstall removes all plugin data.
+
+== Privacy ==
+
+Administrators control enablement, access, retention, clearing, disconnect, and uninstall. Default retention is 24 hours with a 10,000-record cap; retention ranges from one hour to 30 days and the cap from 100 to 100,000. The plugin supplies suggested Privacy Policy Guide text. Site owners determine their lawful basis and privacy notice; the plugin does not promise legal compliance.
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial public release with WordPress Runtime and Hosting Ukraine API sources.

@@ -2,7 +2,7 @@
 
 Идентификатор: `ics-brief-request-log-001`.
 
-Редакция: `0.2.1`.
+Редакция: `0.3.2`.
 
 Статус: `approved-for-implementation`.
 
@@ -207,6 +207,14 @@ Provider import применяет ту же retention и hard cap, дедупл
 загрузку одного диапазона и выполняет redaction до insert. Частичный import либо откатывается
 транзакционно, либо получает явный resumable cursor; молчаливая двойная запись запрещена.
 
+HTTP, получение архива, gzip-декомпрессия и чтение provider stream выполняются
+вне транзакции. Каждая транзакция охватывает только один подготовленный bounded
+batch и обязательное приведение storage к hard cap. Ошибка insert, commit либо
+prune откатывает текущий batch и завершается безопасной общей ошибкой.
+Runtime, provider batch и cleanup используют один bounded database lock для
+write и cap enforcement. Schema гарантирует transactional engine. Lock не
+охватывает network, archive download, decompression или provider stream.
+
 Credentials храните в отдельной option с `autoload=false`. После сохранения token не
 возвращается в HTML. Disconnect удаляет credentials, но оставляет импортированные
 записи до их retention или ручной очистки; UI прямо объясняет это перед disconnect.
@@ -333,6 +341,23 @@ Coding Standards, PHPCompatibilityWP и PHPUnit integration tooling. Запиш�
 release ZIP из allowlist. CI использует `composer install`.
 
 ## 14. Автоматические проверки
+
+`composer check` запускает единый IRON WARDEN lifecycle: integrity, prebuild,
+production build и postbuild. Разрозненные команды являются внутренними
+диагностическими исполнителями. Historical corpus защищает SHA-256 инварианты:
+nullable Runtime fingerprint, provider deduplication, observer и route spoofing,
+bounded transactional import, database-error distinction, hard cap, schema
+migration 1→2, duplicate Product ID, provider limits, Multisite lifecycle и
+production ZIP allowlist без stale entries. Current tests покрывают остальные
+доменные, security, admin, provider и lifecycle сценарии.
+
+| WARDEN phase | Request Log evidence |
+| --- | --- |
+| Integrity | manifest shape, historical SHA-256, registered files and active/superseded chains |
+| Prebuild | repository validation, PHP syntax, WPCS, PHPCompatibilityWP, PHPUnit, security/privacy fixtures, migrations, Suite and Multisite |
+| Build | allowlist production ZIP from the exact source tree |
+| Postbuild | package contents, byte reproduction, stale-entry regression, ZIP hash, Plugin Check and installed-package smoke tests |
+| Manual | authenticated Hosting Ukraine smoke test, accessibility, localization and final external-policy review |
 
 Добавьте GitHub Actions с checkout submodules и PHP matrix:
 

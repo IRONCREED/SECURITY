@@ -16,9 +16,9 @@
       "id": "ics-profile-001",
       "type": "founding-profile",
       "title": "IRONCREED Security Founding Profile",
-      "revision": "0.2.0",
+      "revision": "0.3.0",
       "status": "active",
-      "effectiveDate": "2026-08-28",
+      "effectiveDate": "2026-08-29",
       "path": "governance/PROFILE.md",
       "basis": ["ics-constitution-adoption-001"]
     },
@@ -26,9 +26,9 @@
       "id": "ics-act-wordpress-development-001",
       "type": "legislation",
       "title": "WordPress Plugin Development Act",
-      "revision": "0.2.0",
+      "revision": "0.3.2",
       "status": "active",
-      "effectiveDate": "2026-08-28",
+      "effectiveDate": "2026-08-29",
       "path": "governance/legislation/WORDPRESS_PLUGIN_DEVELOPMENT.md",
       "basis": ["ics-constitution-adoption-001", "ics-profile-001"]
     },
@@ -36,9 +36,9 @@
       "id": "ics-brief-request-log-001",
       "type": "implementation-brief",
       "title": "IRONCREED Request Log implementation brief",
-      "revision": "0.2.0",
+      "revision": "0.3.2",
       "status": "approved-for-implementation",
-      "effectiveDate": "2026-08-28",
+      "effectiveDate": "2026-08-29",
       "path": "plugins/ironcreed-request-log/IMPLEMENTATION-BRIEF.md",
       "basis": ["ics-profile-001", "ics-act-wordpress-development-001"]
     }

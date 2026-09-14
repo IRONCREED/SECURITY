@@ -55,6 +55,15 @@ external constraints for distributable code.
 The current Hosting Ukraine service, privacy, and applicable-law review is
 recorded in `docs/EXTERNAL-SERVICE-AND-PRIVACY-REVIEW.md`.
 
+Run the complete repository release check from the Request Log plugin directory:
+
+```bash
+composer check
+```
+
+This command delegates to IRON WARDEN. Individual tools remain diagnostic
+executors and do not establish release readiness on their own.
+
 ## Licensing
 
 The repository uses the pinned shared policy declared in `LICENSE.md`.

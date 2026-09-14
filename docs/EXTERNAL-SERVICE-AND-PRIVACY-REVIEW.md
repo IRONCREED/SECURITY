@@ -10,6 +10,12 @@
 и содержание собственного privacy notice. Проверка не заменяет индивидуальную
 юридическую консультацию.
 
+IRON WARDEN prebuild фиксирует автоматические проверки disclosure, отсутствия
+секретов, opt-in network boundary, credentials lifecycle и synthetic provider
+fixtures. Authenticated Hosting Ukraine smoke test и актуальность terms/privacy
+составляют отдельное manual evidence. Фактический API-контракт остаётся закреплён
+в `plugins/ironcreed-request-log/docs/HOSTING-UKRAINE-API-CONTRACT.md`.
+
 ## 1. Итог
 
 API-адаптер совместим с Конституцией проекта после поправок к Профилю,

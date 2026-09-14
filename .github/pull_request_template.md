@@ -9,6 +9,14 @@ and any new filesystem or network boundary. Write `No change` where applicable.
 
 ## Evidence
 
+### IRON WARDEN
+
+- Full command: `composer check`
+- Git SHA:
+- Integrity / prebuild / postbuild:
+- Production ZIP SHA-256:
+- Pending or manual gates:
+
 - [ ] Repository validation
 - [ ] WordPress Coding Standards
 - [ ] PHPCompatibilityWP
@@ -18,8 +26,8 @@ and any new filesystem or network boundary. Write `No change` where applicable.
 - [ ] Reproducible package inspection
 - [ ] Manual smoke test
 
-List exact commands, environments, and results for applicable checks. Explain
-why any item is not yet applicable.
+List exact environments and results. Individual commands are diagnostic evidence
+and do not replace the complete WARDEN result.
 
 ## Release impact
 

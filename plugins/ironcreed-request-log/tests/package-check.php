@@ -1,0 +1,11 @@
+<?php
+$root = dirname( __DIR__ );
+$required = array( 'ironcreed-request-log.php', 'uninstall.php', 'readme.txt', 'license.txt', 'changelog.txt', 'docs/HOSTING-UKRAINE-API-CONTRACT.md' );
+foreach ( $required as $file ) { if ( ! is_file( $root . '/' . $file ) ) { fwrite( STDERR, "Missing {$file}\n" ); exit( 1 ); } }
+$runtime_roots = array( 'ironcreed-request-log.php', 'uninstall.php', 'readme.txt', 'license.txt', 'changelog.txt', 'includes', 'docs/HOSTING-UKRAINE-API-CONTRACT.md' );
+foreach ( $runtime_roots as $runtime_root ) {
+	$path = $root . '/' . $runtime_root;
+	$files = is_dir( $path ) ? new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS ) ) : array( new SplFileInfo( $path ) );
+	foreach ( $files as $file ) { if ( ! $file->isFile() ) continue; $contents=file_get_contents($file->getPathname()); if ( preg_match('/Bearer\s+(?!<token>|test-token-not-a-secret)[A-Za-z0-9._-]{12,}/',$contents) ) { fwrite(STDERR,"Possible credential in {$file}\n"); exit(1); } }
+}
+echo "Package assertions passed.\n";

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap.php" colors="false"><testsuites><testsuite name="runtime-v3"><directory suffix="Test.php">.</directory></testsuite></testsuites></phpunit>

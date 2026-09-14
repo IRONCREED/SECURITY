@@ -6,6 +6,14 @@ This gate applies to every plugin intended for the official WordPress Plugin
 Directory. Passing it creates release evidence; final acceptance remains a
 decision of the WordPress.org Plugins Team.
 
+A release candidate requires a fully successful `composer check` IRON WARDEN
+run for the exact source commit and production ZIP. WARDEN covers integrity,
+WPCS, PHPCompatibilityWP, PHPUnit, Plugin Check, clean WordPress and Multisite
+smoke tests, lifecycle checks, and reproducible package verification. Manual
+authenticated-provider, accessibility, localization, and policy review remain
+separate evidence. Any failed, unavailable, pending, or missing mandatory
+result keeps the release status pending.
+
 ## Authoritative external sources
 
 - Detailed Plugin Guidelines:

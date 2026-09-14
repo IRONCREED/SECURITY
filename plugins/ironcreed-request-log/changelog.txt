@@ -1,0 +1,4 @@
+= 1.0.0 =
+* Added opt-in WordPress Runtime request observation.
+* Added manual, read-only Hosting Ukraine nginx log retrieval.
+* Added bounded storage, redaction, privacy controls, Suite Protocol navigation, and duplicate-copy protection.

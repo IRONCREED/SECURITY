@@ -1,0 +1,28 @@
+name: Request Log
+on:
+  pull_request:
+    paths:
+      - 'constitutional-guard/**'
+      - 'governance/**'
+      - 'docs/WORDPRESS-ORG-RELEASE-GATE.md'
+      - 'composer.json'
+      - 'composer.lock'
+      - '.github/**'
+      - 'plugins/ironcreed-request-log/**'
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.0', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+        with: {submodules: recursive}
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+      - run: composer install --no-interaction --prefer-dist --no-progress
+        working-directory: plugins/ironcreed-request-log
+      - run: composer check
+        working-directory: plugins/ironcreed-request-log

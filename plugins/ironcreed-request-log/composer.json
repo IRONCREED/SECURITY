@@ -1,0 +1,27 @@
+{
+  "name": "ironcreed/request-log",
+  "description": "Development tools for IRONCREED Request Log.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "phpcompatibility/phpcompatibility-wp": "2.1.8",
+    "phpunit/phpunit": "9.6.23",
+    "wp-coding-standards/wpcs": "3.2.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "lint": "phpcs --standard=phpcs.xml.dist",
+    "test": "phpunit -c phpunit.xml.dist",
+    "package-check": "php tests/package-check.php",
+    "check": "php ../../constitutional-guard/run.php all",
+    "build": "bash tools/build.sh"
+  }
+}

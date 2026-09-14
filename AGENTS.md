@@ -26,3 +26,9 @@ fixtures containing real personal data.
 Every implementation change must include the smallest sufficient automated
 evidence and must leave the release package compliant with the WordPress.org
 release gate.
+
+Run the complete IRON WARDEN interface with `composer check` after changes to
+code, tests, builds, release documentation, or governance. An unavailable or
+pending mandatory check prevents a passed WARDEN result. Add a release-critical
+regression to the historical manifest; replace one only by preserving the old
+file as `superseded` with an active `supersededBy` successor.

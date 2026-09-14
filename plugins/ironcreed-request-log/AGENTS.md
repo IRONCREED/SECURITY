@@ -20,3 +20,8 @@ verified external-service behavior in `readme.txt` and the Privacy Policy Guide.
 
 Complete every acceptance check and include a release-candidate report before
 presenting the plugin as ready for WordPress.org submission.
+
+Run `composer check` as the single complete IRON WARDEN command after relevant
+changes. Never report WARDEN as passed while a mandatory gate is failed,
+unavailable, pending, or awaiting manual evidence. Register release-critical
+regressions in the historical manifest and preserve superseded files and links.

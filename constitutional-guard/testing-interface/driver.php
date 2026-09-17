@@ -48,7 +48,7 @@ final class Iron_Warden_Test_Driver {
 	}
 
 	public static function run_historical_suite( string $suite ): void {
-		if ( ! in_array( $suite, array( 'provider', 'runtime', 'storage', 'warden', 'provider-v4', 'runtime-v3', 'storage-v4', 'warden-v4' ), true ) ) throw new RuntimeException( 'Unknown historical suite.' );
+		if ( ! in_array( $suite, array( 'provider', 'runtime', 'storage', 'warden', 'provider-v4', 'runtime-v3', 'storage-v4', 'warden-v4', 'admin-refresh-v1' ), true ) ) throw new RuntimeException( 'Unknown historical suite.' );
 		self::phpunit( self::plugin_root() . '/tests/historical/' . $suite . '/phpunit.xml' );
 	}
 

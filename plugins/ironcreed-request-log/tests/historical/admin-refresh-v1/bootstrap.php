@@ -31,15 +31,15 @@ function esc_html( $message ) { return $message; }
 function wp_die( $message, $title = '', $arguments = array() ) { throw new RuntimeException( $message ); }
 if ( ! class_exists( 'wpdb' ) ) { class wpdb { public string $prefix = 'wp_'; public string $last_error = ''; public function get_charset_collate(){return '';} } }
 
-require_once dirname( __DIR__ ) . '/includes/domain/class-uri-normalizer.php';
-require_once dirname( __DIR__ ) . '/includes/domain/class-event.php';
-require_once dirname( __DIR__ ) . '/includes/application/interface-http-client.php';
-require_once dirname( __DIR__ ) . '/includes/application/interface-provider.php';
-require_once dirname( __DIR__ ) . '/includes/infrastructure/class-hosting-ukraine-provider.php';
-require_once dirname( __DIR__ ) . '/includes/infrastructure/class-event-repository.php';
-require_once dirname( __DIR__ ) . '/includes/admin/class-admin-controller.php';
-require_once dirname( __DIR__ ) . '/includes/class-plugin.php';
-require_once dirname( __DIR__ ) . '/includes/infrastructure/class-lifecycle.php';
+require_once dirname( __DIR__, 3 ) . '/includes/domain/class-uri-normalizer.php';
+require_once dirname( __DIR__, 3 ) . '/includes/domain/class-event.php';
+require_once dirname( __DIR__, 3 ) . '/includes/application/interface-http-client.php';
+require_once dirname( __DIR__, 3 ) . '/includes/application/interface-provider.php';
+require_once dirname( __DIR__, 3 ) . '/includes/infrastructure/class-hosting-ukraine-provider.php';
+require_once dirname( __DIR__, 3 ) . '/includes/infrastructure/class-event-repository.php';
+require_once dirname( __DIR__, 3 ) . '/includes/admin/class-admin-controller.php';
+require_once dirname( __DIR__, 3 ) . '/includes/class-plugin.php';
+require_once dirname( __DIR__, 3 ) . '/includes/infrastructure/class-lifecycle.php';
 
 function absint( $value ) { return abs( (int) $value ); }
 function wp_next_scheduled( $hook ) { return $GLOBALS['test_schedule'][$hook] ?? false; }
@@ -69,8 +69,8 @@ function delete_transient( $key ) { unset($GLOBALS['test_transients'][$key]);ret
 function wp_safe_redirect( $url ) { throw new Test_Redirect($url); }
 class Test_Redirect extends Exception {}
 defined('MINUTE_IN_SECONDS') || define('MINUTE_IN_SECONDS',60);
-require_once dirname(__DIR__).'/includes/infrastructure/class-provider-rate-limit.php';
-require_once dirname(__DIR__).'/includes/infrastructure/class-provider-import.php';
-require_once dirname(__DIR__).'/includes/infrastructure/class-hosting-ukraine-discovery.php';
-require_once dirname(__DIR__).'/includes/admin/class-settings-view.php';
-require_once dirname(__DIR__).'/includes/admin/class-help-view.php';
+require_once dirname(__DIR__, 3).'/includes/infrastructure/class-provider-rate-limit.php';
+require_once dirname(__DIR__, 3).'/includes/infrastructure/class-provider-import.php';
+require_once dirname(__DIR__, 3).'/includes/infrastructure/class-hosting-ukraine-discovery.php';
+require_once dirname(__DIR__, 3).'/includes/admin/class-settings-view.php';
+require_once dirname(__DIR__, 3).'/includes/admin/class-help-view.php';

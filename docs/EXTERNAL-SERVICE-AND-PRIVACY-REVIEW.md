@@ -83,14 +83,16 @@ IP-адрес, URI с идентификаторами, User-Agent и Referer. �
 Она перечисляет время, IP, HTTP status, method/URI, User-Agent, Referer и размер
 ответа. Панель хранит логи за текущий и три предыдущих месяца при наличии
 запросов. Плагин сохраняет собственный более короткий bounded retention после
-ручного импорта.
+ручного или явно разрешённого периодического импорта.
 
 Аутентифицированная документация проверена 2026-08-28. Метод использует
 `POST https://adm.tools/action/hosting/log/web/nginx/`, заголовок
 `Authorization: Bearer <token>`, параметр `host_id` типа `int` и необязательный
 `date` типа `DateTime` со значением по умолчанию `today`. Ответом является
 `.gz`-архив nginx access log. Token истекает через шесть месяцев после последнего
-использования; в панели указаны limits 5 000 запросов на час и 28 800 на сутки.
+использования. Старые почасовые/суточные лимиты не считаются актуальным
+контрактом: публичная инструкция указывает 60 запросов в минуту; для конкретного
+ответа учитываются актуальные заголовки лимитов и Retry-After.
 
 Эти сведения закреплены в `plugins/ironcreed-request-log/docs/`
 `HOSTING-UKRAINE-API-CONTRACT.md`. Первый выпуск намеренно использует только
@@ -117,7 +119,7 @@ limitation, transparency, privacy by design/default и security of processing.
 Технические последствия:
 
 - оба источника выключены после установки;
-- Hosting Ukraine вызывается только после настройки и ручного действия;
+- Hosting Ukraine вызывается при явном lookup/test/fetch либо отдельном opt-in на периодический импорт;
 - UI до подключения и fetch объясняет поля, цель, retention, доступ и удаление;
 - event storage никогда не содержит credentials, authorization headers,
   cookies, request bodies и чувствительные query values;
@@ -154,3 +156,10 @@ scope в актуальной API-документации.
 | Implementation brief | Поднять до `0.2.0`; добавить provider, UI, tests и документацию |
 | Release gate | Добавить provider terms, personal-data и secret checks |
 | Suite Protocol | Сохранить без изменения; источник логов не меняет межплагинный протокол |
+
+## Дополнение от 2026-09-16
+
+Решение ics-decision-request-log-ux-001 разрешает read-only поиск ID по домену и
+opt-in периодический импорт. Исходные выводы о manual-only границе заменены этим
+решением. Проверка нового authenticated lookup, consent UI, WP-Cron и локализации
+остаётся обязательной перед release; актуальный контракт хранится в API-CONTRACT.

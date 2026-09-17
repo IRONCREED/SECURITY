@@ -113,9 +113,10 @@ final class Iron_Warden_Runner {
 			}
 		} );
 		$this->tool_gate( 'prebuild', 'WordPress Coding Standards', $this->plugin . '/vendor/bin/phpcs', escapeshellarg( $this->plugin . '/vendor/bin/phpcs' ) . ' --standard=' . escapeshellarg( $this->plugin . '/phpcs.xml.dist' ) );
-		$this->tool_gate( 'prebuild', 'PHPCompatibilityWP', $this->plugin . '/vendor/bin/phpcs', escapeshellarg( $this->plugin . '/vendor/bin/phpcs' ) . ' --standard=PHPCompatibilityWP --runtime-set testVersion 8.0- ' . escapeshellarg( $this->plugin ) );
+		$this->tool_gate( 'prebuild', 'PHPCompatibilityWP', $this->plugin . '/vendor/bin/phpcs', escapeshellarg( $this->plugin . '/vendor/bin/phpcs' ) . ' --standard=PHPCompatibilityWP --runtime-set testVersion 8.0- --extensions=php ' . escapeshellarg( $this->plugin . '/ironcreed-request-log.php' ) . ' ' . escapeshellarg( $this->plugin . '/uninstall.php' ) . ' ' . escapeshellarg( $this->plugin . '/includes' ) );
 		$this->tool_gate( 'prebuild', 'PHPUnit current tests', $this->plugin . '/vendor/bin/phpunit', escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $this->root . '/constitutional-guard/testing-interface/current-phpunit.php' ) );
 		$this->command_gate( 'prebuild', 'package source assertions', PHP_BINARY . ' ' . escapeshellarg( $this->plugin . '/tests/package-check.php' ) );
+		$this->command_gate( 'prebuild', 'English and Ukrainian catalogs', 'python3 ' . escapeshellarg( $this->plugin . '/tools/translations.py' ) );
 		$this->command_gate( 'prebuild', 'historical prebuild corpus', $this->historical_command( 'prebuild' ) );
 		$this->gate( 'prebuild', 'credential and fixture scan', function (): void {
 			$command = 'find ' . escapeshellarg( $this->root )

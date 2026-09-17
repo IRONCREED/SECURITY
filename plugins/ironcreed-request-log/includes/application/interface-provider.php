@@ -1,5 +1,9 @@
 <?php
-/** Provider port. @package Ironcreed_Request_Log */
+/**
+ * Provider port.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log\Application;
 

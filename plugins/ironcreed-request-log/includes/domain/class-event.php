@@ -1,5 +1,9 @@
 <?php
-/** Validated request event. @package Ironcreed_Request_Log */
+/**
+ * Validated request event.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log\Domain;
 
@@ -9,7 +13,11 @@ final class Event {
 	public const ROUTES  = array( 'front-end', 'rest', 'ajax', 'cron', 'xml-rpc', 'login', 'admin', 'unknown' );
 	public const METHODS = array( 'GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'CONNECT', 'TRACE', 'UNKNOWN' );
 
-	/** Validate and bound an event record. */
+	/**
+	 * Validate and bound an event record.
+	 *
+	 * @param array $event Normalized event values.
+	 */
 	public static function validate( array $event ): array {
 		$method = strtoupper( (string) ( $event['method'] ?? '' ) );
 		$route  = (string) ( $event['route_kind'] ?? 'unknown' );
@@ -32,7 +40,14 @@ final class Event {
 		);
 	}
 
-	/** Validate an integer range. */
+	/**
+	 * Validate an integer range.
+	 *
+	 * @param mixed $value Untrusted input value.
+	 * @param int   $minimum Minimum allowed value.
+	 * @param int   $maximum Maximum allowed value.
+	 * @param int   $fallback Fallback for invalid values.
+	 */
 	private static function range( mixed $value, int $minimum, int $maximum, int $fallback ): int {
 		$value = (int) $value;
 		return $value >= $minimum && $value <= $maximum ? $value : $fallback;

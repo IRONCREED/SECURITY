@@ -1,0 +1,515 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+#: includes/admin/class-admin-controller.php
+msgid "%d bytes"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "%d min"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "%d ms"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "%d records were cleared from the selected source."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "%d sec"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "API guide"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "About log sources"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php includes/admin/class-settings-view.php
+msgid "About refresh and import"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "About retention and clearing"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Allow periodic downloads from Hosting Ukraine, including when this page is closed."
+msgstr ""
+
+#: includes/class-plugin.php
+msgid "An administrator may resolve a domain through Hosting Ukraine, test a connection or fetch today’s nginx access log. Separate opt-in permits scheduled imports while the admin page is closed. The request sends the saved Bearer token and host ID to adm.tools and may receive IP addresses, URIs, response status and size, User-Agent, and Referer. Imported records remain local, follow the configured retention, and can be cleared by source. Disconnect deletes credentials; uninstall deletes credentials, settings, schedules, capabilities, and records. IRONCREED and other services receive no fetched logs."
+msgstr ""
+
+#: includes/infrastructure/class-lifecycle.php ironcreed-request-log.php
+msgid "Another active copy of IRONCREED Request Log has the same Product ID. Keep only one copy active."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Any"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Automatic import enabled"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Bearer token"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Check source enablement, filters, retention and storage readiness. For Hosting Ukraine, verify the hosting site ID, token, delegated permissions and API IP restrictions. The provider may not yet have new records in today’s archive. Test validates access without importing or saving edited credentials; Save connection commits the form. Large or malformed responses fail safely."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Choosing a domain in Multisite"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Clear this source"
+msgstr ""
+
+#: ironcreed-request-log.php
+msgid "Conflicting IRONCREED Request Log copies loaded: %1$s and %2$s. Keep one copy active."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Connected hosting site ID: %d"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Connection"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Connection method"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Connection saved. Scheduled imports remain off until you enable them."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Details"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Disconnect"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Enable WordPress Runtime logging"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Enter ID manually"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Enter a token for this connection. Testing does not save it."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Enter the hosting site domain. We will resolve its ID when you connect or test."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Explicit confirmation is required to clear request records."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "External service and privacy"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php includes/admin/class-settings-view.php
+msgid "Fetch today’s logs"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Filter"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Find ID by domain"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "For a network served by one hosting virtual host, start with the main network site domain; the lookup form suggests it. Separately hosted mapped domains may have their own host IDs. Confirm the domain in the hosting panel. WordPress blog IDs are unrelated. Connections, schedules and records remain local to the site where you configure them."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Help"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Help and frequently asked questions"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Hosting Ukraine"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Hosting Ukraine API"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Hosting Ukraine fetch completed. %d new records were imported."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Hosting site ID"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "How do refresh, import and retention differ?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "How do the two sources differ?"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "I understand that these records will be permanently deleted."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php includes/class-plugin.php
+msgid "IRONCREED Request Log"
+msgstr ""
+
+#: includes/suite/class-suite-menu.php
+msgid "IRONCREED — Security"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Import in progress"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Import interval"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Inspect individual HTTP requests, their time, method, URI and response status. Filters help investigate failures and unexpected traffic. This tool does not block requests."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Last attempt"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Last import failed; check the connection and retry."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Last import succeeded"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Last successful import"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Lookup sends the domain and Bearer token only to adm.tools. Test and import send the hosting site ID and token there. Logs may include IP addresses, URIs, response sizes, User-Agent and Referer. Imported data stays in the WordPress database under the configured retention and access controls. IRONCREED receives no logs. Activation and opening this screen make no provider request."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Lookup sends your domain and token to adm.tools. Test and import send the hosting site ID and token and download logs that may contain personal data. The saved token stays hidden."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Main network site domain"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Manual import only"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Maximum stored records"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Method"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "New records in the last successful import: %d"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Next attempt"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "No records are available for this source."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Observed UTC"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Off"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Open API → Documentation. Under Hosting, inspect the hosting accounts, My sites and Logs methods. The site-list example requires the hosting account ID. The get_id method can resolve a hosting site by its domain with type=host. Manual request examples can include your active token: remove it before sharing screenshots or code."
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Open Hosting Ukraine API"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Open adm.tools → Account → API → Access data. Activate API access if needed, then choose Show token. Paste it into the password field. The token can access services delegated to your account. Check IP restrictions under Access restrictions. The hosting documentation states that it expires six months after its last use."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Path contains"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Privacy policy"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Provider adapter"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Refresh saved records"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Refresh saved records reloads the local table and makes no provider request. Fetch downloads today’s archive now. Scheduled imports download it periodically after separate consent, even while the page is closed. Retention hours controls how long records are kept. Repeated downloads deduplicate records; zero new records can be a successful result."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Request"
+msgstr ""
+
+#: includes/suite/class-suite-menu.php
+msgid "Request Log"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Request Log sections"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Request Log settings were saved."
+msgstr ""
+
+#: includes/infrastructure/class-lifecycle.php
+msgid "Request Log storage could not be prepared safely. Review the storage diagnostic and try again."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Request Log storage is unavailable."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Retention hours"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Retention removes expired records; the cap retains the newest records across both sources. Clear deletes the selected source after confirmation. Disconnect removes the token and stops future imports while keeping existing records. An import already in progress may finish. Deactivation cancels scheduled jobs and preserves data. Uninstall removes all plugin records, credentials, settings, jobs and capabilities."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Rows per page"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Save connection"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Save schedule"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Save settings"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Scheduled imports"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Service terms"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Site domain"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Sources and retention"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Status"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Status class"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Storage is unavailable; no provider request was made."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "Storage is unavailable; no records were cleared."
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "System scheduler instructions"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Test connection"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The Hosting Ukraine connection test failed safely. Verify the credentials and try again."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The Hosting Ukraine connection test succeeded."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The Hosting Ukraine connection was removed. Imported records remain until clearing or retention expiry."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The Hosting Ukraine fetch failed safely. Verify the connection and try again."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The connection could not be saved. Check the domain or hosting site ID, token and delegated access."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The import could not be scheduled. Save a valid connection and try again."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The import schedule was saved."
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "The nginx log method needs host_id for the hosting site. The user ID in the panel header and the ID of a person who delegated access identify accounts or people. account_id identifies a hosting account; virtual_domain_id belongs to another API object. These numbers are not interchangeable. Use Find ID by domain or copy the host_id confirmed by the nginx method."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The requested log source is invalid."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "The selected request records could not be cleared safely."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "This source sees only requests that reach and load WordPress. CDN, WAF, web-server, full-page-cache, and static-file responses remain outside its boundary."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "This source shows entries returned from Hosting Ukraine nginx access logs. Coverage remains limited to the provider log and period returned by its API."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Token saved. Leave empty to keep it, or enter a replacement."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Use the hosting site ID (host_id) accepted by the nginx log method. Account and panel user IDs identify different objects."
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "WP-Cron help"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "WP-Cron needs site traffic or a system scheduler. If attempts are overdue, check the cron setup."
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "WP-Cron runs due tasks when WordPress receives traffic. Low traffic, disabled WP-Cron or blocked loopback requests may delay work. A hosting system scheduler can trigger WordPress cron. Next attempt is a due time, not a real-time guarantee. Provider errors delay retries; only one import can run for this site at a time."
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "What do clear, disconnect and uninstall remove?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "What is Request Log for?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "What is sent to the external service?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Where do I get the Bearer token?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Where is the API documentation in Hosting Ukraine?"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Where to find the hosting site ID"
+msgstr ""
+
+#: includes/admin/class-settings-view.php
+msgid "Where to find the token"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Which ID do I need?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Which domain should Multisite use?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Why is the log empty or the connection failing?"
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "Why is the scheduled import late?"
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "WordPress Runtime"
+msgstr ""
+
+#: includes/class-plugin.php
+msgid "WordPress Runtime logging and the Hosting Ukraine connection are disabled by default. Runtime records stay in this site database and contain UTC time, method, redacted URI, status, duration, route type, and source. They omit IP address, User-Agent, Referer, bodies, cookies, and authorization data."
+msgstr ""
+
+#: includes/admin/class-help-view.php
+msgid "WordPress Runtime observes requests that load WordPress. Hosting Ukraine imports the nginx access log returned by the provider, including requests that may finish before WordPress. Each source has its own tab and clear action."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "You cannot manage this request log."
+msgstr ""
+
+#: includes/admin/class-admin-controller.php
+msgid "You cannot view this request log."
+msgstr ""
+

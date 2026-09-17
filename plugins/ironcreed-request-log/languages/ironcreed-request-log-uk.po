@@ -1,0 +1,386 @@
+msgid ""
+msgstr "Project-Id-Version: IRONCREED Request Log 1.0.0\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid "%d min"
+msgstr "%d хв"
+
+msgid "%d records were cleared from the selected source."
+msgstr "Видалено записів із вибраного джерела: %d."
+
+msgid "API guide"
+msgstr "Посібник API"
+
+msgid "About log sources"
+msgstr "Про джерела журналу"
+
+msgid "About refresh and import"
+msgstr "Про оновлення та імпорт"
+
+msgid "About retention and clearing"
+msgstr "Про зберігання й очищення"
+
+msgid "Allow periodic downloads from Hosting Ukraine, including when this page is closed."
+msgstr "Дозволити періодичне завантаження з «Хостинг Україна», зокрема коли цю сторінку закрито."
+
+msgid "An administrator may resolve a domain through Hosting Ukraine, test a connection or fetch today’s nginx access log. Separate opt-in permits scheduled imports while the admin page is closed. The request sends the saved Bearer token and host ID to adm.tools and may receive IP addresses, URIs, response status and size, User-Agent, and Referer. Imported records remain local, follow the configured retention, and can be cleared by source. Disconnect deletes credentials; uninstall deletes credentials, settings, schedules, capabilities, and records. IRONCREED and other services receive no fetched logs."
+msgstr "Адміністратор може визначити ID домену через «Хостинг Україна», перевірити з’єднання або отримати сьогоднішній журнал nginx. Окрема згода дозволяє запланований імпорт, коли сторінку адміністратора закрито. Запит надсилає збережений токен Bearer та ID сайту до adm.tools і може отримувати IP-адреси, URI, статус і розмір відповіді, User-Agent та Referer. Імпортовані записи зберігаються локально відповідно до заданого строку; їх можна очистити за джерелом. Від’єднання видаляє облікові дані; видалення плагіна видаляє облікові дані, налаштування, розклади, права й записи. IRONCREED та інші сервіси не отримують завантажених журналів."
+
+msgid "Another active copy of IRONCREED Request Log has the same Product ID. Keep only one copy active."
+msgstr "Інша активна копія IRONCREED Request Log має той самий Product ID. Залиште активною одну копію."
+
+msgid "Any"
+msgstr "Будь-який"
+
+msgid "Automatic import enabled"
+msgstr "Автоматичний імпорт увімкнено"
+
+msgid "Bearer token"
+msgstr "Токен Bearer"
+
+msgid "Check source enablement, filters, retention and storage readiness. For Hosting Ukraine, verify the hosting site ID, token, delegated permissions and API IP restrictions. The provider may not yet have new records in today’s archive. Test validates access without importing or saving edited credentials; Save connection commits the form. Large or malformed responses fail safely."
+msgstr "Перевірте ввімкнення джерела, фільтри, строк зберігання та готовність сховища. Для «Хостинг Україна» перевірте ID сайту, токен, делеговані права та IP-обмеження API. У сьогоднішньому архіві провайдера ще може не бути нових записів. Перевірка з’єднання перевіряє доступ без імпорту й збереження змінених облікових даних; кнопка збереження з’єднання зберігає форму. Завеликі або пошкоджені відповіді спричиняють безпечну відмову."
+
+msgid "Choosing a domain in Multisite"
+msgstr "Вибір домену в Multisite"
+
+msgid "Clear this source"
+msgstr "Очистити це джерело"
+
+msgid "Conflicting IRONCREED Request Log copies loaded: %1$s and %2$s. Keep one copy active."
+msgstr "Завантажено конфліктні копії IRONCREED Request Log: %1$s і %2$s. Залиште активною одну копію."
+
+msgid "Connected hosting site ID: %d"
+msgstr "ID підключеного сайту на хостингу: %d"
+
+msgid "Connection"
+msgstr "З’єднання"
+
+msgid "Connection method"
+msgstr "Спосіб підключення"
+
+msgid "Connection saved. Scheduled imports remain off until you enable them."
+msgstr "З’єднання збережено. Запланований імпорт залишатиметься вимкненим, доки ви його не ввімкнете."
+
+msgid "Details"
+msgstr "Подробиці"
+
+msgid "Disconnect"
+msgstr "Від’єднати"
+
+msgid "Enable WordPress Runtime logging"
+msgstr "Увімкнути журнал WordPress Runtime"
+
+msgid "Enter ID manually"
+msgstr "Ввести ID вручну"
+
+msgid "Enter a token for this connection. Testing does not save it."
+msgstr "Введіть токен для цього з’єднання. Перевірка його не зберігає."
+
+msgid "Enter the hosting site domain. We will resolve its ID when you connect or test."
+msgstr "Введіть домен сайту на хостингу. Його ID буде визначено під час підключення або перевірки."
+
+msgid "Explicit confirmation is required to clear request records."
+msgstr "Для очищення записів потрібне явне підтвердження."
+
+msgid "External service and privacy"
+msgstr "Зовнішній сервіс і приватність"
+
+msgid "Fetch today’s logs"
+msgstr "Отримати сьогоднішні журнали"
+
+msgid "Filter"
+msgstr "Фільтрувати"
+
+msgid "Find ID by domain"
+msgstr "Знайти ID за доменом"
+
+msgid "For a network served by one hosting virtual host, start with the main network site domain; the lookup form suggests it. Separately hosted mapped domains may have their own host IDs. Confirm the domain in the hosting panel. WordPress blog IDs are unrelated. Connections, schedules and records remain local to the site where you configure them."
+msgstr "Для мережі, яку обслуговує один віртуальний хост, почніть із домену головного сайту мережі: форма пошуку пропонує саме його. Окремо розміщені прив’язані домени можуть мати власні host_id. Звірте домен у панелі хостингу. ID сайтів WordPress мають інше призначення. З’єднання, розклади й записи залишаються локальними для сайту, де ви їх налаштовуєте."
+
+msgid "Help"
+msgstr "Довідка"
+
+msgid "Help and frequently asked questions"
+msgstr "Довідка та поширені запитання"
+
+msgid "Hosting Ukraine"
+msgstr "Хостинг Україна"
+
+msgid "Hosting Ukraine API"
+msgstr "API «Хостинг Україна»"
+
+msgid "Hosting Ukraine fetch completed. %d new records were imported."
+msgstr "Отримання журналів «Хостинг Україна» завершено. Імпортовано нових записів: %d."
+
+msgid "Hosting site ID"
+msgstr "ID сайту на хостингу"
+
+msgid "How do refresh, import and retention differ?"
+msgstr "Чим відрізняються оновлення, імпорт і зберігання?"
+
+msgid "How do the two sources differ?"
+msgstr "Чим відрізняються два джерела?"
+
+msgid "I understand that these records will be permanently deleted."
+msgstr "Я розумію, що ці записи буде видалено назавжди."
+
+msgid "IRONCREED Request Log"
+msgstr "IRONCREED Request Log"
+
+msgid "IRONCREED — Security"
+msgstr "IRONCREED — Безпека"
+
+msgid "Import in progress"
+msgstr "Триває імпорт"
+
+msgid "Import interval"
+msgstr "Інтервал імпорту"
+
+msgid "Inspect individual HTTP requests, their time, method, URI and response status. Filters help investigate failures and unexpected traffic. This tool does not block requests."
+msgstr "Переглядайте окремі HTTP-запити, їхній час, метод, URI та статус відповіді. Фільтри допомагають досліджувати збої й неочікуваний трафік. Цей інструмент не блокує запити."
+
+msgid "Last attempt"
+msgstr "Остання спроба"
+
+msgid "Last import failed; check the connection and retry."
+msgstr "Останній імпорт завершився помилкою; перевірте з’єднання та повторіть спробу."
+
+msgid "Last import succeeded"
+msgstr "Останній імпорт успішний"
+
+msgid "Last successful import"
+msgstr "Останній успішний імпорт"
+
+msgid "Lookup sends the domain and Bearer token only to adm.tools. Test and import send the hosting site ID and token there. Logs may include IP addresses, URIs, response sizes, User-Agent and Referer. Imported data stays in the WordPress database under the configured retention and access controls. IRONCREED receives no logs. Activation and opening this screen make no provider request."
+msgstr "Пошук надсилає домен і токен Bearer лише до adm.tools. Перевірка та імпорт надсилають туди ID сайту на хостингу й токен. Журнали можуть містити IP-адреси, URI, розміри відповідей, User-Agent та Referer. Імпортовані дані залишаються в базі WordPress із заданими строком зберігання та правами доступу. IRONCREED не отримує журналів. Активація й відкриття цього екрана не виконують запитів до провайдера."
+
+msgid "Lookup sends your domain and token to adm.tools. Test and import send the hosting site ID and token and download logs that may contain personal data. The saved token stays hidden."
+msgstr "Пошук надсилає ваш домен і токен до adm.tools. Перевірка та імпорт надсилають ID сайту й токен та завантажують журнали, які можуть містити персональні дані. Збережений токен залишається прихованим."
+
+msgid "Main network site domain"
+msgstr "Домен головного сайту мережі"
+
+msgid "Manual import only"
+msgstr "Лише ручний імпорт"
+
+msgid "Maximum stored records"
+msgstr "Максимальна кількість записів"
+
+msgid "Method"
+msgstr "Метод"
+
+msgid "New records in the last successful import: %d"
+msgstr "Нових записів під час останнього успішного імпорту: %d"
+
+msgid "Next attempt"
+msgstr "Наступна спроба"
+
+msgid "No records are available for this source."
+msgstr "Для цього джерела записів немає."
+
+msgid "Observed UTC"
+msgstr "Час UTC"
+
+msgid "Off"
+msgstr "Вимкнено"
+
+msgid "Open API → Documentation. Under Hosting, inspect the hosting accounts, My sites and Logs methods. The site-list example requires the hosting account ID. The get_id method can resolve a hosting site by its domain with type=host. Manual request examples can include your active token: remove it before sharing screenshots or code."
+msgstr "Відкрийте API → Документація. У розділі «Хостинг» перегляньте методи хостинг-акаунтів, «Мої сайти» та «Логи». Для прикладу отримання списку сайтів потрібен ID хостинг-акаунта. Метод get_id визначає сайт за доменом із параметром type=host. Приклади ручних запитів можуть містити ваш активний токен: приберіть його, перш ніж ділитися знімками екрана або кодом."
+
+msgid "Open Hosting Ukraine API"
+msgstr "Відкрити API «Хостинг Україна»"
+
+msgid "Open adm.tools → Account → API → Access data. Activate API access if needed, then choose Show token. Paste it into the password field. The token can access services delegated to your account. Check IP restrictions under Access restrictions. The hosting documentation states that it expires six months after its last use."
+msgstr "Відкрийте adm.tools → Обліковий запис → API → Дані доступу. За потреби активуйте доступ до API, потім виберіть «Показати токен». Вставте його в поле пароля. Токен надає доступ і до послуг, делегованих вашому обліковому запису. Перевірте IP-обмеження на вкладці «Обмеження доступу». За документацією хостингу токен діє шість місяців від останнього використання."
+
+msgid "Path contains"
+msgstr "Шлях містить"
+
+msgid "Privacy policy"
+msgstr "Політика конфіденційності"
+
+msgid "Provider adapter"
+msgstr "Адаптер провайдера"
+
+msgid "Refresh saved records"
+msgstr "Оновлювати збережені записи"
+
+msgid "Refresh saved records reloads the local table and makes no provider request. Fetch downloads today’s archive now. Scheduled imports download it periodically after separate consent, even while the page is closed. Retention hours controls how long records are kept. Repeated downloads deduplicate records; zero new records can be a successful result."
+msgstr "Оновлення збережених записів перезавантажує локальну таблицю без запиту до провайдера. Ручне отримання завантажує сьогоднішній архів негайно. Запланований імпорт завантажує його періодично після окремої згоди, зокрема коли сторінку закрито. Строк зберігання визначає, як довго зберігаються записи. Повторні завантаження усувають дублікати; нуль нових записів також може бути успішним результатом."
+
+msgid "Request"
+msgstr "Запит"
+
+msgid "Request Log"
+msgstr "Журнал запитів"
+
+msgid "Request Log sections"
+msgstr "Розділи журналу запитів"
+
+msgid "Request Log settings were saved."
+msgstr "Налаштування журналу запитів збережено."
+
+msgid "Request Log storage could not be prepared safely. Review the storage diagnostic and try again."
+msgstr "Не вдалося безпечно підготувати сховище журналу запитів. Перегляньте діагностику сховища та повторіть спробу."
+
+msgid "Request Log storage is unavailable."
+msgstr "Сховище журналу запитів недоступне."
+
+msgid "Retention hours"
+msgstr "Строк зберігання, год"
+
+msgid "Retention removes expired records; the cap retains the newest records across both sources. Clear deletes the selected source after confirmation. Disconnect removes the token and stops future imports while keeping existing records. An import already in progress may finish. Deactivation cancels scheduled jobs and preserves data. Uninstall removes all plugin records, credentials, settings, jobs and capabilities."
+msgstr "Після завершення строку зберігання записи видаляються; ліміт кількості зберігає найновіші записи обох джерел. Очищення видаляє вибране джерело після підтвердження. Від’єднання видаляє токен і зупиняє майбутні імпорти, зберігаючи наявні записи. Уже розпочатий імпорт може завершитися. Деактивація скасовує заплановані завдання та зберігає дані. Видалення плагіна видаляє всі його записи, облікові дані, налаштування, завдання й права."
+
+msgid "Rows per page"
+msgstr "Рядків на сторінці"
+
+msgid "Save connection"
+msgstr "Зберегти з’єднання"
+
+msgid "Save schedule"
+msgstr "Зберегти розклад"
+
+msgid "Save settings"
+msgstr "Зберегти налаштування"
+
+msgid "Scheduled imports"
+msgstr "Запланований імпорт"
+
+msgid "Service terms"
+msgstr "Умови надання послуг"
+
+msgid "Settings"
+msgstr "Налаштування"
+
+msgid "Site domain"
+msgstr "Домен сайту"
+
+msgid "Sources and retention"
+msgstr "Джерела та зберігання"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Status class"
+msgstr "Клас статусу"
+
+msgid "Storage is unavailable; no provider request was made."
+msgstr "Сховище недоступне; запит до провайдера не виконувався."
+
+msgid "Storage is unavailable; no records were cleared."
+msgstr "Сховище недоступне; записи не видалялися."
+
+msgid "System scheduler instructions"
+msgstr "Інструкції системного планувальника"
+
+msgid "Test connection"
+msgstr "Перевірити з’єднання"
+
+msgid "The Hosting Ukraine connection test failed safely. Verify the credentials and try again."
+msgstr "Перевірка з’єднання з «Хостинг Україна» завершилася безпечною відмовою. Перевірте облікові дані та повторіть спробу."
+
+msgid "The Hosting Ukraine connection test succeeded."
+msgstr "Перевірка з’єднання з «Хостинг Україна» успішна."
+
+msgid "The Hosting Ukraine connection was removed. Imported records remain until clearing or retention expiry."
+msgstr "З’єднання з «Хостинг Україна» видалено. Імпортовані записи залишаються до очищення або завершення строку зберігання."
+
+msgid "The Hosting Ukraine fetch failed safely. Verify the connection and try again."
+msgstr "Отримання журналів «Хостинг Україна» завершилося безпечною відмовою. Перевірте з’єднання та повторіть спробу."
+
+msgid "The connection could not be saved. Check the domain or hosting site ID, token and delegated access."
+msgstr "Не вдалося зберегти з’єднання. Перевірте домен або ID сайту на хостингу, токен і делегований доступ."
+
+msgid "The import could not be scheduled. Save a valid connection and try again."
+msgstr "Не вдалося запланувати імпорт. Збережіть коректне з’єднання та повторіть спробу."
+
+msgid "The import schedule was saved."
+msgstr "Розклад імпорту збережено."
+
+msgid "The nginx log method needs host_id for the hosting site. The user ID in the panel header and the ID of a person who delegated access identify accounts or people. account_id identifies a hosting account; virtual_domain_id belongs to another API object. These numbers are not interchangeable. Use Find ID by domain or copy the host_id confirmed by the nginx method."
+msgstr "Для методу журналу nginx потрібен host_id сайту на хостингу. ID користувача в заголовку панелі та ID особи, яка делегувала доступ, позначають облікові записи або людей. account_id позначає хостинг-акаунт; virtual_domain_id належить іншому об’єкту API. Ці числа не взаємозамінні. Скористайтеся пошуком ID за доменом або скопіюйте host_id, підтверджений методом nginx."
+
+msgid "The requested log source is invalid."
+msgstr "Вибране джерело журналу некоректне."
+
+msgid "The selected request records could not be cleared safely."
+msgstr "Не вдалося безпечно очистити вибрані записи."
+
+msgid "This source sees only requests that reach and load WordPress. CDN, WAF, web-server, full-page-cache, and static-file responses remain outside its boundary."
+msgstr "Це джерело бачить лише запити, які досягають і завантажують WordPress. Відповіді CDN, WAF, вебсервера, повносторінкового кешу та статичних файлів залишаються поза його межами."
+
+msgid "This source shows entries returned from Hosting Ukraine nginx access logs. Coverage remains limited to the provider log and period returned by its API."
+msgstr "Це джерело показує записи журналів доступу nginx, повернуті «Хостинг Україна». Охоплення обмежене журналом провайдера та періодом, який повернув API."
+
+msgid "Token saved. Leave empty to keep it, or enter a replacement."
+msgstr "Токен збережено. Залиште поле порожнім, щоб зберегти його, або введіть новий."
+
+msgid "Use the hosting site ID (host_id) accepted by the nginx log method. Account and panel user IDs identify different objects."
+msgstr "Використовуйте ID сайту на хостингу (host_id), який приймає метод журналу nginx. ID акаунта та користувача панелі позначають інші об’єкти."
+
+msgid "WP-Cron help"
+msgstr "Довідка WP-Cron"
+
+msgid "WP-Cron needs site traffic or a system scheduler. If attempts are overdue, check the cron setup."
+msgstr "WP-Cron потребує трафіку сайту або системного планувальника. Якщо спроби прострочено, перевірте налаштування cron."
+
+msgid "WP-Cron runs due tasks when WordPress receives traffic. Low traffic, disabled WP-Cron or blocked loopback requests may delay work. A hosting system scheduler can trigger WordPress cron. Next attempt is a due time, not a real-time guarantee. Provider errors delay retries; only one import can run for this site at a time."
+msgstr "WP-Cron виконує належні завдання, коли WordPress отримує трафік. Низький трафік, вимкнений WP-Cron або заблоковані loopback-запити можуть затримувати роботу. Системний планувальник хостингу може запускати cron WordPress. Час наступної спроби є плановим, а не гарантією виконання в реальному часі. Помилки провайдера відкладають повторні спроби; для цього сайту одночасно виконується один імпорт."
+
+msgid "What do clear, disconnect and uninstall remove?"
+msgstr "Що видаляють очищення, від’єднання та видалення плагіна?"
+
+msgid "What is Request Log for?"
+msgstr "Для чого потрібен Request Log?"
+
+msgid "What is sent to the external service?"
+msgstr "Що надсилається зовнішньому сервісу?"
+
+msgid "Where do I get the Bearer token?"
+msgstr "Де отримати токен Bearer?"
+
+msgid "Where is the API documentation in Hosting Ukraine?"
+msgstr "Де розташована документація API «Хостинг Україна»?"
+
+msgid "Where to find the hosting site ID"
+msgstr "Де знайти ID сайту на хостингу"
+
+msgid "Where to find the token"
+msgstr "Де знайти токен"
+
+msgid "Which ID do I need?"
+msgstr "Який ID потрібен?"
+
+msgid "Which domain should Multisite use?"
+msgstr "Який домен використовувати в Multisite?"
+
+msgid "Why is the log empty or the connection failing?"
+msgstr "Чому журнал порожній або з’єднання не працює?"
+
+msgid "Why is the scheduled import late?"
+msgstr "Чому запланований імпорт запізнюється?"
+
+msgid "WordPress Runtime"
+msgstr "WordPress Runtime"
+
+msgid "WordPress Runtime logging and the Hosting Ukraine connection are disabled by default. Runtime records stay in this site database and contain UTC time, method, redacted URI, status, duration, route type, and source. They omit IP address, User-Agent, Referer, bodies, cookies, and authorization data."
+msgstr "Журнал WordPress Runtime і з’єднання з «Хостинг Україна» вимкнені за замовчуванням. Записи Runtime залишаються в базі цього сайту та містять час UTC, метод, очищений URI, статус, тривалість, тип маршруту й джерело. Вони не містять IP-адреси, User-Agent, Referer, тіл запитів, cookie та даних авторизації."
+
+msgid "WordPress Runtime observes requests that load WordPress. Hosting Ukraine imports the nginx access log returned by the provider, including requests that may finish before WordPress. Each source has its own tab and clear action."
+msgstr "WordPress Runtime спостерігає за запитами, що завантажують WordPress. «Хостинг Україна» імпортує журнал доступу nginx, повернутий провайдером, зокрема запити, які можуть завершуватися до WordPress. Кожне джерело має власну вкладку та дію очищення."
+
+msgid "You cannot manage this request log."
+msgstr "Ви не маєте права керувати цим журналом запитів."
+
+msgid "You cannot view this request log."
+msgstr "Ви не маєте права переглядати цей журнал запитів."
+
+msgid "%d sec"
+msgstr "%d с"
+
+msgid "%d ms"
+msgstr "%d мс"
+
+msgid "%d bytes"
+msgstr "%d байт"

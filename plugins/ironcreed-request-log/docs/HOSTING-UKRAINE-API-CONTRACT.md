@@ -1,7 +1,9 @@
 # Hosting Ukraine API contract for version 1.0
 
-Status: verified on 2026-08-28 from the authenticated Hosting Ukraine API
-documentation. This document is intentionally secret-free. It is the normative
+Log-download contract: reviewed from authenticated documentation on 2026-08-28;
+pilot import confirmed by the operator on 2026-09-16. Domain-lookup contract:
+reviewed against the public provider example on 2026-09-16; authenticated lookup
+smoke remains pending. This document is intentionally secret-free. It is the normative
 external-service contract for `HostingUkraineApiProvider` in version 1.0.
 
 ## Request
@@ -11,7 +13,7 @@ external-service contract for `HostingUkraineApiProvider` in version 1.0.
 | HTTPS endpoint | `https://adm.tools/action/hosting/log/web/nginx/` |
 | HTTP method | `POST` |
 | Authorization | `Authorization: Bearer <token>` |
-| Required parameter | `host_id` — integer Hosting Ukraine hosting-account identifier |
+| Required parameter | `host_id` — positive integer Hosting Ukraine site/virtual-host identifier (distinct from account_id and panel user IDs) |
 | Optional parameter | `date` — `DateTime`; the documented default is `today` |
 
 The plugin stores the token as a secret connection credential. It never places
@@ -33,7 +35,7 @@ parameter. Redirects are rejected, including redirects to the same host.
 
 On success, the method returns a `.gz` archive containing the selected nginx
 access log. The response is treated as binary data, never JSON. The adapter
-accepts one complete daily archive per manual fetch and has no pagination or
+accepts one complete daily archive per manual or explicitly scheduled fetch and has no pagination or
 cursor behaviour in version 1.0.
 
 The authenticated method screen does not declare a response JSON schema, an
@@ -51,9 +53,19 @@ Ukraine limit.
 
 ## Limits and read-only behaviour
 
-The authenticated account page displays 5,000 API requests per hour and 28,800
-per day. Version 1.0 makes no background calls: the endpoint is invoked only by
-an authorized administrator's explicit connection test or manual fetch.
+The current public API guide documents a replenishing limit of 60 requests per
+minute and X-RateLimit-Limit, X-RateLimit-Remaining, and Retry-After on 429.
+The operator's account may expose a different current limit; response headers
+are authoritative for that request. The former hourly/daily figures are removed.
+
+The adapter runs on explicit test/fetch, or after separate scheduling consent.
+WP-Cron intervals are 1, 5, 15 or 60 minutes; default is disabled. Every attempt
+downloads today's full archive and imports new retained records through the same
+bounded parser/repository. This is periodic archive retrieval. Missed prior days
+are not backfilled. Retry delay is bounded and 429 pauses scheduled and manual
+imports. A separate provider-operation reservation prevents overlapping downloads;
+the storage writer lock retains its short transaction-only scope.
+Disconnect/deactivation cancel future jobs; a running download may complete.
 
 The method downloads an access-log archive. `HostingUkraineApiProvider` is
 read-only with respect to the hosting account; it does not change hosting,
@@ -86,3 +98,29 @@ URI, account identifier, token or real log entry.
 Review this contract against the authenticated documentation before every
 release candidate and after a provider API notice. Update this file and its
 tests together if the contract changes.
+
+## Domain lookup
+
+The fixed read-only method is POST https://adm.tools/action/get_id/ with the same
+Bearer header and form fields name=<ASCII-domain> and type=host. Read only
+response.host_id as a positive integer. Do not substitute account_id,
+virtual_domain_id, the panel user ID or a WordPress blog ID. The public example
+is the provider forum response of 2021-06-09:
+<https://www.ukraine.com.ua/forum/pozhelaniya-i-predlozheniya/Konsol-v-ChatBote-Telegram.html>.
+The current guide also documents get_id for a different object type (domain);
+that DNS identifier is not used by this adapter.
+
+The discovery response is bounded to 64 KiB, decoded as JSON, and never shown raw.
+Redirects, missing/ambiguous IDs, explicit failure, malformed JSON and oversized
+bodies fail without modifying saved credentials. HTTP timeout is 20 seconds.
+Only an explicit Connect/Test action may perform lookup. Read-only JSON discovery
+and gzip log downloads have distinct parsers. Temporary responses are removed.
+
+For a Multisite network using one hosting virtual host, suggest the main site's
+domain. Mapped domains on distinct virtual hosts need operator-confirmed IDs.
+Credentials, schedules and records remain site-local. Public-source review is
+not authenticated evidence. Recheck lookup against the panel before release;
+never use screenshot tokens.
+
+Current public API guide:
+<https://www.ukraine.com.ua/wiki/account/api/>.

@@ -1,5 +1,9 @@
 <?php
-/** Uninstall IRONCREED Request Log. @package Ironcreed_Request_Log */
+/**
+ * Uninstall IRONCREED Request Log.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 

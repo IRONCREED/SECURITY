@@ -6,4 +6,12 @@
  <arg name="extensions" value="php"/><arg value="ps"/>
  <rule ref="WordPress-Core"/><rule ref="WordPress-Docs"/><rule ref="WordPress-Extra"/>
  <rule ref="PHPCompatibilityWP"/>
+ <rule ref="WordPress.WP.Capabilities">
+  <properties>
+   <property name="custom_capabilities" type="array">
+    <element value="view_ironcreed_request_log"/>
+    <element value="manage_ironcreed_request_log"/>
+   </property>
+  </properties>
+ </rule>
 </ruleset>

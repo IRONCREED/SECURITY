@@ -12,7 +12,7 @@ $site_ids = static function (): array {
 $each_site = static function ( callable $check ) use ( $site_ids ): void {
 	foreach ( $site_ids() as $id ) { switch_to_blog( $id ); try { $check( $id ); } finally { restore_current_blog(); } }
 };
-$options = array( 'schema', 'storage_ready', 'storage_diagnostic', 'migration_retry_after', 'enabled', 'retention', 'cap', 'credentials', 'runtime_diagnostic', 'cleanup_diagnostic' );
+$options = array( 'schema', 'storage_ready', 'storage_diagnostic', 'migration_retry_after', 'enabled', 'retention', 'cap', 'credentials', 'runtime_diagnostic', 'cleanup_diagnostic', 'import_interval', 'import_status' );
 $caps = array( 'view_ironcreed_request_log', 'manage_ironcreed_request_log' );
 $site_ready = static function ( bool $active ) use ( $fail, $caps ): void {
 	global $wpdb;
@@ -21,6 +21,7 @@ $site_ready = static function ( bool $active ) use ( $fail, $caps ): void {
 	$nullable = $wpdb->get_var( $wpdb->prepare( "SELECT IS_NULLABLE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s AND COLUMN_NAME = 'fingerprint'", $table ) );
 	if ( 'InnoDB' !== $engine || 'YES' !== $nullable || '2' !== get_option( 'ironcreed_request_log_schema' ) || '1' !== get_option( 'ironcreed_request_log_storage_ready' ) || $wpdb->last_error ) $fail();
 	if ( '0' !== get_option( 'ironcreed_request_log_enabled' ) || 24 !== (int) get_option( 'ironcreed_request_log_retention' ) || 10000 !== (int) get_option( 'ironcreed_request_log_cap' ) || $active !== (bool) wp_next_scheduled( 'ironcreed_request_log_cleanup' ) ) $fail();
+	if ( wp_next_scheduled( 'ironcreed_request_log_import' ) ) $fail();
 	$role = get_role( 'administrator' );
 	foreach ( $caps as $cap ) if ( ! $role || ! $role->has_cap( $cap ) ) $fail();
 };
@@ -31,7 +32,7 @@ $site_removed = static function () use ( $fail, $options, $caps ): void {
 	if ( null !== $found || $wpdb->last_error ) $fail();
 	foreach ( $options as $suffix ) if ( false !== get_option( 'ironcreed_request_log_' . $suffix, false ) ) $fail();
 	$role = get_role( 'administrator' );
-	if ( wp_next_scheduled( 'ironcreed_request_log_cleanup' ) ) $fail();
+	if ( wp_next_scheduled( 'ironcreed_request_log_cleanup' ) || wp_next_scheduled( 'ironcreed_request_log_import' ) ) $fail();
 	foreach ( $caps as $cap ) if ( $role && $role->has_cap( $cap ) ) $fail();
 };
 try {
@@ -73,10 +74,11 @@ try {
 	} elseif ( 'seed-persistent-state' === $mode ) {
 		$each_site( static function () use ( $fail ): void {
 			global $wpdb;
-			foreach ( array( 'credentials' => array( 'synthetic' => 'warden-fixture' ), 'storage_diagnostic' => 'synthetic-smoke', 'runtime_diagnostic' => 'synthetic-smoke', 'cleanup_diagnostic' => 'synthetic-smoke', 'migration_retry_after' => 0 ) as $suffix => $value ) {
+			foreach ( array( 'credentials' => array( 'synthetic' => 'warden-fixture' ), 'storage_diagnostic' => 'synthetic-smoke', 'runtime_diagnostic' => 'synthetic-smoke', 'cleanup_diagnostic' => 'synthetic-smoke', 'migration_retry_after' => 0, 'import_interval' => 300, 'import_status' => array( 'state' => 'success', 'count' => 2 ) ) as $suffix => $value ) {
 				update_option( 'ironcreed_request_log_' . $suffix, $value, false );
 				if ( get_option( 'ironcreed_request_log_' . $suffix ) != $value ) $fail();
 			}
+			if ( ! wp_schedule_single_event( time() + HOUR_IN_SECONDS, 'ironcreed_request_log_import' ) || ! wp_next_scheduled( 'ironcreed_request_log_import' ) ) $fail();
 			$row = array( 'observed_at' => '2020-01-01 00:00:00', 'method' => 'GET', 'path' => '/warden-fixture', 'query' => '', 'status' => 200, 'duration_ms' => 1, 'route_kind' => 'front-end', 'source' => 'wordpress-runtime', 'fingerprint' => null, 'response_bytes' => 0, 'client_ip' => '', 'user_agent' => '', 'referer' => '' );
 			if ( 1 !== $wpdb->insert( $wpdb->prefix . 'ironcreed_request_log_events', $row ) ) $fail();
 		} );

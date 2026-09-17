@@ -3,7 +3,7 @@
 
 defined( 'ARRAY_A' ) || define( 'ARRAY_A', 'ARRAY_A' );
 defined( 'HOUR_IN_SECONDS' ) || define( 'HOUR_IN_SECONDS', 3600 );
-defined( 'ABSPATH' ) || define( 'ABSPATH', '/synthetic-wordpress/' );
+defined( 'ABSPATH' ) || define( 'ABSPATH', __DIR__ . '/fixtures/wordpress/' );
 
 function wp_parse_url( $url ) { return parse_url( $url ); }
 function wp_check_invalid_utf8( $text ) { return mb_check_encoding( $text, 'UTF-8' ) ? $text : ''; }

@@ -62,7 +62,7 @@
           "sha256": "f29f8fd6abd071436ca933fb4d7d6a612b5b42bea0f8ecbb8f5bd3ae0b31e8a4"
         }
       ],
-      "supersededBy": "ics-warden-storage-invariants-004"
+      "supersededBy": "ics-warden-storage-invariants-005"
     },
     {
       "id": "ics-warden-package-invariants-001",
@@ -175,7 +175,7 @@
           "sha256": "4c4fd5e8a363dd1386c2b07b4c9afed1a403c9eb2d8075a128e1938f22264ea0"
         }
       ],
-      "supersededBy": "ics-warden-storage-invariants-004"
+      "supersededBy": "ics-warden-storage-invariants-005"
     },
     {
       "id": "ics-warden-trust-boundary-001",
@@ -249,7 +249,7 @@
           "sha256": "4c4fd5e8a363dd1386c2b07b4c9afed1a403c9eb2d8075a128e1938f22264ea0"
         }
       ],
-      "supersededBy": "ics-warden-storage-invariants-004"
+      "supersededBy": "ics-warden-storage-invariants-005"
     },
     {
       "id": "ics-warden-trust-boundary-002",
@@ -324,7 +324,7 @@
       "path": "history/prebuild/storage-invariants-v4.php",
       "phase": "prebuild",
       "sha256": "a431775c5380a675edbc134efd74c5434df8c1d05203ea0e44f57c21414379ce",
-      "status": "active",
+      "status": "superseded",
       "dependencies": [
         {
           "path": "plugins/ironcreed-request-log/tests/historical/storage-v4/MigrationTest.php",
@@ -346,7 +346,8 @@
           "path": "plugins/ironcreed-request-log/tests/historical/storage-v4/phpunit.xml",
           "sha256": "3f531aea7dcb317bfd02b9155bb99ee927417aeb0559a72db7f56378d8c3c851"
         }
-      ]
+      ],
+      "supersededBy": "ics-warden-storage-invariants-005"
     },
     {
       "id": "ics-warden-trust-boundary-003",
@@ -419,6 +420,39 @@
       "phase": "prebuild",
       "sha256": "0db6e1e2d7b9d5e03d6831466f5553495edddc6ee0a5399ba3c63665c8cc84ff",
       "status": "active"
+    },
+    {
+      "id": "ics-warden-storage-invariants-005",
+      "path": "history/prebuild/storage-invariants-v5.php",
+      "phase": "prebuild",
+      "sha256": "47a9fcd3512bae7abcd66ec06c488465b56ac43e24958875e9b54c6ea2e6dbf0",
+      "status": "active",
+      "dependencies": [
+        {
+          "path": "plugins/ironcreed-request-log/tests/historical/storage-v5/MigrationTest.php",
+          "sha256": "3182043215599cf66186b5908fc97ce5cb46bf2dd561afd2edda726c1ef42134"
+        },
+        {
+          "path": "plugins/ironcreed-request-log/tests/historical/storage-v5/ObserverFailureTest.php",
+          "sha256": "4829de9fcea3629eb63e49b226c5afcd8765cd370f7ffd02c2c374a215e3d758"
+        },
+        {
+          "path": "plugins/ironcreed-request-log/tests/historical/storage-v5/RepositoryTest.php",
+          "sha256": "c020c912b2b1aa32107aeb8e85a2e95e7c77c0c6695d53b7eafc1a24ba74647e"
+        },
+        {
+          "path": "plugins/ironcreed-request-log/tests/historical/storage-v5/bootstrap.php",
+          "sha256": "0368e23210dfdff9cd7482f27286776fc1bfdb81e35d8c9c615f6e316b0abafc"
+        },
+        {
+          "path": "plugins/ironcreed-request-log/tests/historical/storage-v5/phpunit.xml",
+          "sha256": "c356204c011b5887bfe915fc10e4dedc6dc018b4fdc3146314e58ac9cc50ec89"
+        },
+        {
+          "path": "plugins/ironcreed-request-log/tests/fixtures/wordpress/wp-admin/includes/upgrade.php",
+          "sha256": "1fade3b564d6ab3c3a652c537b83f7bed60ebaf42729edaa7fe8b47eac537631"
+        }
+      ]
     }
   ],
   "testingInterface": [
@@ -432,7 +466,7 @@
     },
     {
       "path": "testing-interface/driver.php",
-      "sha256": "0f466e07af715c200919d9539d33f0eda3c6205a7a6c9b7b99602686d413ce1e"
+      "sha256": "90e6d9d58785184903eda8f46d43898c0b2f92c9f9f5896f6510a84906b6a43e"
     },
     {
       "path": "testing-interface/integration-runner.php",

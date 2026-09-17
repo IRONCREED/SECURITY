@@ -1,6 +1,6 @@
 # Request Log usability update — verification
 
-Date: 2026-09-16. Upstream base: `7625c5b316f6e05cb6cb94874502b492cdbfc8f4`
+Date: 2026-09-17. Upstream base: `7625c5b316f6e05cb6cb94874502b492cdbfc8f4`
 from `IRONCREED/SECURITY/main`. Work branch: `feat/request-log-admin-refresh`.
 Release status: **pending**. No production ZIP or ZIP SHA-256 is claimed.
 
@@ -15,7 +15,7 @@ Release status: **pending**. No production ZIP or ZIP SHA-256 is claimed.
 | Ukrainian | 128 English/uk strings; committed POT/PO/MO; parity, placeholders and compiled MO are checked by `tools/translations.py` and WARDEN. Maintenance requirements are in README. |
 | Automatic import | Separate opt-in intervals of 1/5/15/60 minutes, site-local WP-Cron, operation reservation, safe status, bounded retry/backoff, cancellation and restoration on activation. Table refresh only rereads local records. |
 | Plugin Check findings | Explicit nonce/capability boundaries, safe opaque-token validation, translator comments, prepared lifecycle identifiers, scoped uncached schema operations and `Tested up to` metadata. Packaging excludes development files. Official Plugin Check rerun is still required. |
-| GitHub failure | Restored the two approved submodule gitlinks; repository validation passes. Added a committed lockfile compatible with the PHP 8.0 CI target. |
+| GitHub failure | Restored the two approved submodule gitlinks; Governance CI passes. Added a PHP-8.0-compatible lockfile and portable migration fixtures; current unit tests pass on PHP 8.0 and 8.4. |
 
 The provider lookup contract was checked against a public Hosting Ukraine example;
 its current authenticated behavior still requires the manual check below. The
@@ -33,7 +33,7 @@ installation on the declared minimum does not select PHP-8.1-only development pa
 | Current PHPUnit | 76 tests / 687 assertions passed |
 | Historical provider-v4 | 8 tests / 29 assertions passed |
 | Historical runtime-v3 | 10 tests / 12 assertions passed |
-| Historical storage-v4 | 14 tests / 66 assertions passed |
+| Historical storage-v5 | 14 tests / 66 assertions passed |
 | Historical warden-v4 | 16 tests / 467 assertions passed |
 | Historical admin-refresh-v1 | 24 tests / 100 assertions passed |
 | Total PHPUnit | **148 tests / 1,361 assertions passed** |
@@ -52,6 +52,30 @@ therefore its aggregate gate is unavailable. The five self-contained historical
 PHPUnit suites listed above were also run individually, with the locked binary.
 Previously accepted historical files were preserved byte-for-byte. New regressions
 and the updated testing-interface closure are SHA-256 protected.
+
+GitHub CI exposed an existing migration fixture that attempted to write under
+`/synthetic-wordpress` at the filesystem root. This succeeded in the local root
+environment but failed on unprivileged GitHub runners. Current migration tests and
+the new protected storage-v5 successor now use a committed synthetic include inside
+the test tree, without writing to the filesystem. Storage-v4 remains unchanged and
+superseded. Both PHP jobs run the successor explicitly; neither job cancels the other,
+and a failed WARDEN run also prints current PHPUnit diagnostics.
+
+## GitHub verification
+
+The PR source at `c09ae6886f76375bf59fda2fcd20484854760421` was verified by:
+
+- [Governance run 35181743124](https://github.com/IRONCREED/SECURITY/actions/runs/35181743124): passed.
+- [Request Log run 35181743127](https://github.com/IRONCREED/SECURITY/actions/runs/35181743127):
+  PHP 8.0.30 and 8.4.25, Composer 2.10.3. Both jobs passed historical storage-v5
+  (14 tests / 66 assertions), current PHPUnit (76 tests / 687 assertions), integrity,
+  syntax, WPCS, PHPCompatibilityWP, package assertions and translation checks.
+
+Both Request Log jobs retain a failed workflow conclusion because `composer check`
+returns nonzero when mandatory WordPress, Multisite and MySQL integration boundaries
+are unavailable. No current unit test is failing in this run. The WARDEN phase and
+release status are **pending**; missing gates have not been waived or reported as passed.
+The later report-only commit does not change the verified implementation or tests.
 
 The original Plugin Check attachment contained 118 errors and 416 warnings, mostly
 in development tests/configuration included in the installed source directory.

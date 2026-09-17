@@ -34,7 +34,13 @@ PHPUnit/WPCS versions and a clean Composer audit.
 - PHP syntax, source package assertions, repository contracts and translation parity: passed.
 - All previously accepted historical files/dependencies remain byte-identical.
 - A separate protected regression verifies that missing/incomplete WordPress test paths are unavailable.
+- Migration fixtures no longer require root filesystem write permissions; the
+  protected storage-v5 successor is exercised separately on PHP 8.0 and 8.4 in CI.
+- GitHub Governance passed. Request Log CI on PHP 8.0.30 and 8.4.25 passed current
+  PHPUnit (76 tests / 687 assertions per job), storage-v5 (14 / 66), integrity,
+  syntax, WPCS, compatibility, package and translation checks.
 - Full WARDEN remains pending for WordPress, Multisite and MySQL integration environments.
+  Consequently the Request Log workflow still returns nonzero; no mandatory gate is waived.
 - No production ZIP was produced. Installed-package smoke, official Plugin Check,
   authenticated domain lookup/scheduled fetch and visual/accessibility review remain pending.
 

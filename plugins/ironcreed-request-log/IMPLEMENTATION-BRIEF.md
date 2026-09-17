@@ -2,7 +2,7 @@
 
 Идентификатор: `ics-brief-request-log-001`.
 
-Редакция: `0.3.2`.
+Редакция: `0.4.0`.
 
 Статус: `approved-for-implementation`.
 
@@ -147,9 +147,11 @@ authentication, параметры, ответ `.gz`, срок действия 
 размера или ошибка распаковки завершают импорт безопасной общей ошибкой без показа
 тела ответа. Contract, код, tests и публичная документация не содержат реальный token.
 
-Сетевой вызов появляется только после явного `Test connection` или `Fetch logs`. В 1.0
-отсутствуют фоновая синхронизация, live tail, планировщик и webhook. HTTP client подменяется
-в tests. Endpoint и host зафиксированы в adapter и не вводятся в UI.
+Сетевой вызов появляется после явного поиска ID, `Test connection`, `Fetch logs`
+либо отдельного включения периодического импорта. Планировщик выключен по
+умолчанию, использует WP-Cron, показывает последний и следующий запуск,
+предотвращает параллельные импорты и применяет backoff. Live tail и webhook
+отсутствуют. HTTP client подменяется в tests. API endpoint зафиксирован в adapter.
 
 ### 4.4. Поля 1.0
 
@@ -235,43 +237,43 @@ nonce до включения, выключения, добавления, пр�
 
 ## 8. Интерфейс
 
-Создайте страницы `Request Log` и `Settings` на native WordPress admin UI. CSS
-и JavaScript загружаются только на страницах плагина.
+Один пункт `Tools → Request Log` открывает четыре вкладки: `WordPress Runtime`,
+`Hosting Ukraine`, `Settings`, `Help`. Suite Protocol сохраняет тот же page slug.
+Старая ссылка на Settings переводит на новую вкладку. View и manage capabilities
+остаются раздельными; недоступная вкладка Settings не выдаёт credentials.
 
-`Request Log` содержит отдельные вкладки `WordPress Runtime` и `Hosting Ukraine`. Вкладка
-Hosting Ukraine видна до подключения и показывает пустое состояние со ссылкой на
-`Settings → Connections`. Общая вкладка `All` допустима только как простая проекция над
-тем же repository без второго storage и без скрытия source.
+Settings содержит Sources, Connections, Scheduled imports и Privacy and retention.
+Выбор Hosting Ukraine открывает два способа: поиск ID по домену и ручной ввод.
+Bearer token вводится один раз; кнопка проверки расположена рядом. Поиск вызывает
+фиксированный `get_id` с `type=host`, подтверждает positive host_id и сохраняет
+connection только после явного submit. Ручное сохранение не вызывает HTTP.
+Для Multisite предлагается домен главного сайта; администратор сверяет virtual host.
+User ID, account_id и virtual_domain_id не подставляются вместо host_id автоматически.
 
-Основной экран содержит:
+Кнопки используют native WordPress styles и flex-wrap: одна строка на широком
+экране, доступное вертикальное расположение на узком. CSS и JS загружаются только
+на страницах плагина. Поля имеют label и связь с ошибкой. Кнопки «?» ведут на Help
+с открытым соответствующим FAQ и keyboard focus. Help доступен без JavaScript.
+Краткое disclosure внешнего сервиса и состояние сохранённого token остаются у формы.
+Сохранённый token никогда не возвращается в HTML.
 
-- status и badge текущего source;
-- постоянное объяснение границы;
-- ручное обновление для WordPress и `Fetch today's logs` для Hosting Ukraine;
-- фильтры времени, метода, status class, path substring и доступных для source полей;
-- пагинированную таблицу с общими колонками и source-specific details;
-- ясное пустое состояние;
-- отдельную очистку с подтверждением.
+FAQ раскрывает назначение, границы источников, получение token и host_id, различия
+идентификаторов, разделы Hosting Ukraine API, Multisite, автоимпорт, WP-Cron,
+retention/cap, clear/disconnect/uninstall, отсутствие записей и ошибки доступа.
 
-Page sizes: 20, 50, 100. Default sorting — newest first. Sorting и filters
-используют allowlists. Filters сохраняются в URL без sensitive data.
-Auto-refresh и export отсутствуют.
+Таблица сохраняет pagination (20/50/100), canonical newest-first order, URL filters,
+source-specific поля и явную очистку с подтверждением. Пустое состояние ведёт к
+настройке. Local table refresh выключен по умолчанию и не обращается к провайдеру.
+Периодический импорт имеет отдельный allowlist интервалов 1/5/15/60 минут,
+выключен по умолчанию и работает при закрытой вкладке через WP-Cron. UI показывает
+последнюю попытку, последний успех, число новых записей и следующий запуск.
+Просроченный запуск объясняет зависимость WP-Cron от трафика/system scheduler.
 
-Не опирайтесь на private WordPress API. Если `WP_List_Table` остаётся private в
-минимальной версии, создайте небольшую доступную таблицу на public APIs.
-
-Settings содержит блоки `Sources`, `Connections` и `Privacy and retention`.
-
-`Sources` показывает встроенный WordPress Runtime с enable/disable и его границей.
-`Connections` содержит выпадающий список `Add connection`; в 1.0 в нём есть только
-`Hosting Ukraine API`. Выбор открывает краткую форму с полями, подтверждёнными по
-актуальному API-контракту: `host_id` и Bearer token. Форма описывает внешний сервис, данные, условия,
-приватность и риск token до сохранения. Кнопки: `Test connection`, `Save connection`,
-`Disconnect`. Сохранённый token не показывается; поле позволяет только заменить его.
-
-`Privacy and retention` содержит retention, hard cap, source-specific поля, кнопки очистки и
-ссылку на Privacy Policy Guide. Server log path, export, telemetry, auto-refresh и фоновая
-синхронизация отсутствуют.
+Исходные строки — английские; locale `uk` поставляется в PO/MO. POT, PO/MO,
+placeholders, FAQ и строки PHP синхронизируются при каждом изменении; locale сайта
+и предпочтение языка администратора использует стандартный механизм WordPress.
+Новые assets и languages включаются в allowlist сборки. Export, live tail,
+произвольные локальные файлы и другие providers остаются вне объёма.
 
 ## 9. Suite Protocol
 
@@ -429,7 +431,7 @@ privacy, tests и packaging в неопределённый последний �
 
 - reproducible ZIP устанавливается без другого IRONCREED-плагина;
 - запись выключена и включается только уполномоченным действием;
-- внешний запрос отсутствует до connection и ручного действия;
+- внешний запрос отсутствует до connection и ручного действия либо отдельного согласия на периодический импорт;
 - concrete requests имеют method, redacted URI, status и source-specific fields;
 - source и его граница постоянно видимы;
 - retention, cap, cleanup, clear и uninstall доказаны;

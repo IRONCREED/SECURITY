@@ -1,25 +1,43 @@
 <?php
-/** IRONCREED Suite Protocol v1 menu adapter. @package Ironcreed_Request_Log */
+/**
+ * IRONCREED Suite Protocol v1 menu adapter.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log\Suite;
 
 /** Registers inert metadata and coordinates same-theme navigation. */
 final class Suite_Menu {
-	/** @var callable */
+	/**
+	 * Plugin-owned admin page renderer.
+	 *
+	 * @var callable
+	 */
 	private $render;
 
-	/** @param callable $render Plugin-owned page callback. */
+	/**
+	 * Initialize the adapter dependencies.
+	 *
+	 * @param callable $render Plugin-owned page callback.
+	 */
 	public function __construct( callable $render ) {
 		$this->render = $render;
 	}
 
-	/** Register protocol hooks. */
+	/**
+	 * Register protocol hooks.
+	 */
 	public function register(): void {
 		add_filter( 'ironcreed_suite_registry_v1', array( $this, 'descriptor' ) );
 		add_action( 'admin_menu', array( $this, 'menu' ), 20 );
 	}
 
-	/** Append this plugin's inert descriptor. */
+	/**
+	 * Append this plugin's inert descriptor.
+	 *
+	 * @param mixed $registry Existing suite descriptors.
+	 */
 	public function descriptor( mixed $registry ): array {
 		$registry   = is_array( $registry ) ? $registry : array();
 		$registry[] = array(
@@ -37,7 +55,9 @@ final class Suite_Menu {
 		return $registry;
 	}
 
-	/** Register standalone or grouped navigation. */
+	/**
+	 * Register standalone or grouped navigation.
+	 */
 	public function menu(): void {
 		$valid = array_filter( apply_filters( 'ironcreed_suite_registry_v1', array() ), array( self::class, 'valid_descriptor' ) );
 		usort(
@@ -59,7 +79,11 @@ final class Suite_Menu {
 		add_submenu_page( 'ironcreed-security', __( 'Request Log', 'ironcreed-request-log' ), __( 'Request Log', 'ironcreed-request-log' ), 'view_ironcreed_request_log', 'ironcreed-request-log', $this->render );
 	}
 
-	/** Validate descriptor shape without invoking its render callback. */
+	/**
+	 * Validate descriptor shape without invoking its render callback.
+	 *
+	 * @param mixed $descriptor Candidate suite descriptor.
+	 */
 	private static function valid_descriptor( mixed $descriptor ): bool {
 		return is_array( $descriptor )
 			&& 'ironcreed' === ( $descriptor['vendor'] ?? null )

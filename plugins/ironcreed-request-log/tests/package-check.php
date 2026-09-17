@@ -1,8 +1,8 @@
 <?php
 $root = dirname( __DIR__ );
-$required = array( 'ironcreed-request-log.php', 'uninstall.php', 'readme.txt', 'license.txt', 'changelog.txt', 'docs/HOSTING-UKRAINE-API-CONTRACT.md' );
+$required = array( 'ironcreed-request-log.php', 'uninstall.php', 'readme.txt', 'license.txt', 'changelog.txt', 'docs/HOSTING-UKRAINE-API-CONTRACT.md', 'assets/admin.css', 'assets/admin.js', 'languages/ironcreed-request-log.pot', 'languages/ironcreed-request-log-uk.po', 'languages/ironcreed-request-log-uk.mo' );
 foreach ( $required as $file ) { if ( ! is_file( $root . '/' . $file ) ) { fwrite( STDERR, "Missing {$file}\n" ); exit( 1 ); } }
-$runtime_roots = array( 'ironcreed-request-log.php', 'uninstall.php', 'readme.txt', 'license.txt', 'changelog.txt', 'includes', 'docs/HOSTING-UKRAINE-API-CONTRACT.md' );
+$runtime_roots = array( 'ironcreed-request-log.php', 'uninstall.php', 'readme.txt', 'license.txt', 'changelog.txt', 'includes', 'docs/HOSTING-UKRAINE-API-CONTRACT.md', 'assets/admin.css', 'assets/admin.js', 'languages/ironcreed-request-log.pot', 'languages/ironcreed-request-log-uk.po', 'languages/ironcreed-request-log-uk.mo' );
 foreach ( $runtime_roots as $runtime_root ) {
 	$path = $root . '/' . $runtime_root;
 	$files = is_dir( $path ) ? new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $path, FilesystemIterator::SKIP_DOTS ) ) : array( new SplFileInfo( $path ) );

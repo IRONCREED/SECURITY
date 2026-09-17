@@ -76,7 +76,7 @@ change independently of this repository.
 - No telemetry, remote contact, or tracking occurs without informed consent.
   Activation alone performs no remote request. The Hosting Ukraine provider is
   contacted only after an authorized administrator configures it and explicitly
-  starts a connection test or log fetch.
+  starts a host lookup, connection test or log fetch, or separately enables scheduled imports.
 - The external service provides substantive hosting-log functionality and is
   named in `readme.txt`, with its purpose, transmitted and received data, API
   documentation, Terms of Service, and Privacy Policy.

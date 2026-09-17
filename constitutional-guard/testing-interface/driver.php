@@ -63,6 +63,7 @@ final class Iron_Warden_Test_Driver {
 		$map = array( 'IRON_WARDEN_MULTISITE_TEST_COMMAND' => 'multisite-current' );
 		if ( ! isset( $map[ $variable ] ) ) throw new RuntimeException( 'Unknown integration boundary.' );
 		$status = self::command( escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( self::repository_root() . '/constitutional-guard/testing-interface/integration-runner.php' ) . ' ' . escapeshellarg( $map[ $variable ] ), $output );
+		if ( 2 === $status ) { fwrite( STDERR, "The typed WordPress testing environment is unavailable.\n" ); exit( 2 ); }
 		if ( 0 !== $status ) throw new RuntimeException( $output ?: 'WordPress testing boundary failed.' );
 	}
 }

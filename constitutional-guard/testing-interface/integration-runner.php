@@ -16,8 +16,9 @@ function warden_wp_cli( string $root ): string {
 
 if ( in_array( $mode, array( 'wordpress-current', 'multisite-current' ), true ) ) {
 	$phpunit = realpath( $root . '/plugins/ironcreed-request-log/vendor/bin/phpunit' );
-	$tests   = realpath( (string) getenv( 'IRON_WARDEN_WORDPRESS_TESTS_DIR' ) );
-	if ( false === $phpunit || ! is_executable( $phpunit ) || false === $tests || ! is_file( $tests . '/includes/bootstrap.php' ) ) exit( 2 );
+	$declared_tests = getenv( 'IRON_WARDEN_WORDPRESS_TESTS_DIR' );
+	$tests = is_string( $declared_tests ) && '' !== trim( $declared_tests ) ? realpath( $declared_tests ) : false;
+	if ( false === $phpunit || ! is_executable( $phpunit ) || false === $tests || ! is_file( $tests . '/includes/bootstrap.php' ) || ! is_file( $tests . '/includes/functions.php' ) ) exit( 2 );
 	$environment = array( 'WP_TESTS_DIR' => $tests, 'WP_MULTISITE' => 'multisite-current' === $mode ? '1' : '0' );
 	list( $status, $stdout, $stderr ) = iron_warden_capture( array( $phpunit, '-c', $root . '/plugins/ironcreed-request-log/tests/integration/phpunit.xml', '--group', $mode ), $environment );
 	$result = $stdout . $stderr;

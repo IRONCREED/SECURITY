@@ -412,12 +412,19 @@
       "phase": "postbuild",
       "sha256": "d8704020bdbd2cf2d378cf73379da5f4d5f52744e509975a0d6d3f624a02a4d6",
       "status": "active"
+    },
+    {
+      "id": "ics-warden-missing-environment-001",
+      "path": "history/prebuild/missing-integration-environment.php",
+      "phase": "prebuild",
+      "sha256": "0db6e1e2d7b9d5e03d6831466f5553495edddc6ee0a5399ba3c63665c8cc84ff",
+      "status": "active"
     }
   ],
   "testingInterface": [
     {
       "path": "run.php",
-      "sha256": "429bf304f9d2458c2c5dbc31ff3852f3098f4eabd200bf1b480e171339d8cf78"
+      "sha256": "ec8a5ea9a885333bdade8bc079d78c1f8102963e6a80a31b606ef418e8320586"
     },
     {
       "path": "testing-interface/current-phpunit.php",
@@ -425,11 +432,11 @@
     },
     {
       "path": "testing-interface/driver.php",
-      "sha256": "7bc14344cec5b61a7182179234e28b754b616e178ad13c7a2f2c1bb9f383b90c"
+      "sha256": "0f466e07af715c200919d9539d33f0eda3c6205a7a6c9b7b99602686d413ce1e"
     },
     {
       "path": "testing-interface/integration-runner.php",
-      "sha256": "20cc50e062272814d6142661934d158f7537e1418be6556b8854c90af6d2b2ac"
+      "sha256": "da34caa6194e6b6f7f2402baa0088489305539dd6ba9b2c3bf97866d109d2e06"
     },
     {
       "path": "testing-interface/mysql-repository-runner.php",

@@ -117,7 +117,7 @@ final class Iron_Warden_Runner {
 		$this->tool_gate( 'prebuild', 'PHPUnit current tests', $this->plugin . '/vendor/bin/phpunit', escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( $this->root . '/constitutional-guard/testing-interface/current-phpunit.php' ) );
 		$this->command_gate( 'prebuild', 'package source assertions', PHP_BINARY . ' ' . escapeshellarg( $this->plugin . '/tests/package-check.php' ) );
 		$this->command_gate( 'prebuild', 'English and Ukrainian catalogs', 'python3 ' . escapeshellarg( $this->plugin . '/tools/translations.py' ) );
-		$this->command_gate( 'prebuild', 'historical prebuild corpus', $this->historical_command( 'prebuild' ) );
+		$this->command_gate( 'prebuild', 'historical prebuild corpus', $this->historical_command( 'prebuild' ), true );
 		$this->gate( 'prebuild', 'credential and fixture scan', function (): void {
 			$command = 'find ' . escapeshellarg( $this->root )
 				. " \\( -path '*/.git' -o -path '*/build' -o -path '*/vendor' \\) -prune -o"
@@ -252,7 +252,15 @@ final class Iron_Warden_Runner {
 		$this->command_gate( $phase, $name, $command );
 	}
 
-	private function command_gate( string $phase, string $name, string $command ): void {
+	private function command_gate( string $phase, string $name, string $command, bool $typed_unavailable = false ): void {
+		if ( $typed_unavailable ) {
+			exec( $command . ' 2>&1', $output, $status );
+			if ( 2 === $status ) { $this->unavailable( $phase, $name, 'The typed integration environment required by the historical corpus is unavailable.' ); return; }
+			$this->gate( $phase, $name, static function () use ( $status, $output ): void {
+				if ( 0 !== $status ) throw new RuntimeException( trim( implode( "\n", array_slice( $output, -5 ) ) ) ?: 'Historical command failed.' );
+			} );
+			return;
+		}
 		$this->gate( $phase, $name, fn(): bool => 0 === $this->must_run( $command ) );
 	}
 

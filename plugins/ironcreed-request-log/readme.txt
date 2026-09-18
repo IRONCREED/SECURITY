@@ -23,7 +23,7 @@ The plugin has no telemetry, advertising, export, live tail, public endpoint, al
 
 == Installation ==
 
-1. Install and activate the ZIP in WordPress.
+1. Install and activate the distribution ZIP in WordPress. For a source checkout, use tools/build.sh as described in the repository README; do not ZIP the development directory with its tests and tools.
 2. Open Tools > Request Log. Logging remains disabled until an administrator enables WordPress Runtime.
 3. Open Settings, choose Hosting Ukraine API, and enter a token. Resolve the hosting site ID by domain or enter it manually. Test uses the form values; saving a manual ID makes no network request.
 4. Use Fetch today's logs, or separately allow Scheduled imports and choose an interval. Refresh saved records only reloads the local table.

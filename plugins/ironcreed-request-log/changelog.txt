@@ -1,4 +1,8 @@
 = 1.0.0 =
+* Consolidate navigation into Runtime, Hosting Ukraine, Settings and Help.
+* Add domain-to-host lookup through the current get_services API, contextual FAQ and Ukrainian translation.
+* Add consented scheduled imports, safe retry delays and visible status.
+* Restore pinned Governance dependencies and tighten production packaging.
 * Added opt-in WordPress Runtime request observation.
 * Added manual, read-only Hosting Ukraine nginx log retrieval.
 * Added bounded storage, redaction, privacy controls, Suite Protocol navigation, and duplicate-copy protection.

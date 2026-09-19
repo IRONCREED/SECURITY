@@ -3,37 +3,41 @@ Contributors: ironcreed
 Tags: request log, security, privacy, debugging
 Requires at least: 6.5
 Requires PHP: 8.0
+Tested up to: 7.1
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Inspect bounded WordPress requests and manually fetched Hosting Ukraine nginx access logs with privacy controls.
+Inspect bounded WordPress requests and optionally scheduled Hosting Ukraine nginx access logs with privacy controls.
 
 == Description ==
 
 IRONCREED Request Log offers two opt-in, clearly separated sources.
 
 * **WordPress Runtime** records requests that load WordPress. It cannot see traffic completed by a CDN, WAF, web server, full-page cache, static handler, or any layer before WordPress.
-* **Hosting Ukraine API** manually retrieves today's nginx access-log archive. It shows only records and coverage returned by the provider API.
+* **Hosting Ukraine API** retrieves today's nginx access-log archive manually or on an explicitly enabled schedule. It shows only records and coverage returned by the provider API.
 
 Both sources start disabled. Records use bounded retention and count limits. Sensitive query values are redacted. Runtime records omit IP addresses, User-Agent, Referer, bodies, cookies, and authorization data. Hosting Ukraine records may include IP addresses, URI identifiers, User-Agent, and Referer and must be covered by the site's privacy notice and lawful basis.
 
-The plugin has no telemetry, advertising, export, live tail, background synchronization, public endpoint, alternate updater, or local-file reader. It never sends fetched logs to IRONCREED or another service.
+The plugin has no telemetry, advertising, export, live tail, public endpoint, alternate updater, or local-file reader. It never sends fetched logs to IRONCREED or another service.
+
+Development source, tests, build tooling, and release documentation are maintained at [IRONCREED/SECURITY](https://github.com/IRONCREED/SECURITY/tree/main/plugins/ironcreed-request-log).
 
 == Installation ==
 
-1. Install and activate the ZIP in WordPress.
+1. Install and activate the distribution ZIP in WordPress. For a source checkout, use tools/build.sh as described in the repository README; do not ZIP the development directory with its tests and tools.
 2. Open Tools > Request Log. Logging remains disabled until an administrator enables WordPress Runtime.
-3. Open Tools > Request Log Settings, choose Hosting Ukraine API under Add connection, review the disclosure, and save a host ID and Bearer token.
-4. Use Test connection or Fetch today's logs. Each button is an explicit manual network action.
+3. Open Settings, choose Hosting Ukraine API, and enter a token. Resolve the hosting site ID by domain or enter it manually. Test uses the form values; saving a manual ID makes no network request.
+4. Use Fetch today's logs, or separately allow Scheduled imports and choose an interval. Refresh saved records only reloads the local table.
+5. Open Help or a question-mark link for instructions. Ukrainian is bundled and follows the WordPress user/site locale.
 
-On Multisite, each site stores and displays its own records. Uninstall removes records, settings, credentials, scheduled cleanup, and capabilities from every site. Deactivation preserves data and credentials but cancels cleanup until reactivation.
+On Multisite, each site stores and displays its own records. Uninstall removes records, settings, credentials, all scheduled jobs, and capabilities from every site. Deactivation preserves data and credentials but cancels scheduled jobs until reactivation.
 
 == External services ==
 
-The optional Hosting Ukraine integration calls `https://adm.tools/action/hosting/log/web/nginx/` only when an authorized administrator explicitly tests a connection or fetches today's log. The request sends the saved Bearer token in the Authorization header and the Hosting Ukraine host ID in the request body. The response is a gzip nginx access-log archive that may contain timestamps, IP addresses, methods, URIs, statuses, response sizes, User-Agent values, and Referer values. Imported records are retained in the local WordPress database. Disconnect deletes credentials and leaves imported records until retention expiry or manual clearing.
+The optional Hosting Ukraine integration calls `https://adm.tools/action/hosting/log/web/nginx/` when an authorized administrator explicitly tests/fetches or separately enables scheduled imports. The read-only site lookup calls `https://adm.tools/action/get_services/` with `type=host` and the Bearer token. It receives the host services available to that token, matches the entered domain locally, and uses the matching service `id` as `host_id`; `account_id` and `virtual_domain_id` are not used as substitutes. The discovery list is not stored. Test/import requests send the saved Bearer token in the Authorization header and the matched Hosting Ukraine host ID in the request body. The log response is a gzip nginx access-log archive that may contain timestamps, IP addresses, methods, URIs, statuses, response sizes, User-Agent values, and Referer values. Imported records are retained in the local WordPress database. Disconnect deletes credentials, cancels future scheduled imports, and leaves imported records until retention expiry or manual clearing.
 
-Review the [API method](https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx), [access-log documentation](https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/), [Terms of Service](https://www.ukraine.com.ua/legal/tos/), [public offer](https://www.ukraine.com.ua/legal/publicoffer/), and [Privacy Policy](https://www.ukraine.com.ua/legal/privacypolicy/) before connecting.
+Review the [API method](https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx), [general API guide](https://www.ukraine.com.ua/wiki/account/api/), [access-log documentation](https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/), [Terms of Service](https://www.ukraine.com.ua/legal/tos/), [public offer](https://www.ukraine.com.ua/legal/publicoffer/), and [Privacy Policy](https://www.ukraine.com.ua/legal/privacypolicy/) before connecting.
 
 == Frequently Asked Questions ==
 
@@ -47,7 +51,15 @@ No. The provider adapter downloads the current day's nginx log and remains read-
 
 = When does the plugin make network requests? =
 
-Only after an administrator saves a connection and explicitly starts a connection test or a log fetch. There are no scheduled provider calls.
+On an explicit domain lookup, connection test or log fetch, and periodically after separate opt-in. Installing, activating, opening a screen or saving a manual connection does not contact the provider. A token entered for a test is used but not saved.
+
+= Why is automatic import late? =
+
+WP-Cron needs site traffic or an operator-configured system scheduler. Low traffic, disabled cron or failed loopbacks can delay execution. The UI shows the last and next attempt. Errors back off; Retry-After is honored for rate-limited imports. Each download covers today's archive only.
+
+= Which ID should Multisite use? =
+
+For a shared hosting virtual host, start with the main network site domain. Separately hosted mapped domains may need different IDs. IDs from the user header, hosting account or WordPress blog are different objects. Connections remain local to the configured site.
 
 = Does the WordPress personal-data exporter identify records by email? =
 

@@ -13,6 +13,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php: ['8.0', '8.4']
     steps:
@@ -24,5 +25,12 @@ jobs:
           tools: composer:v2
       - run: composer install --no-interaction --prefer-dist --no-progress
         working-directory: plugins/ironcreed-request-log
+      - name: Verify portable historical storage fixtures
+        run: vendor/bin/phpunit -c "$PWD/tests/historical/storage-v5/phpunit.xml" --do-not-cache-result --colors=never
+        working-directory: plugins/ironcreed-request-log
       - run: composer check
+        working-directory: plugins/ironcreed-request-log
+      - name: Show unit test failure details
+        if: failure()
+        run: vendor/bin/phpunit -c phpunit.xml.dist --do-not-cache-result --colors=never
         working-directory: plugins/ironcreed-request-log

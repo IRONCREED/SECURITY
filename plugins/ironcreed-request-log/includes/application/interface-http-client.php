@@ -1,5 +1,9 @@
 <?php
-/** HTTP client port. @package Ironcreed_Request_Log */
+/**
+ * HTTP client port.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log\Application;
 

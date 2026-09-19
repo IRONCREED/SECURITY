@@ -1,13 +1,16 @@
 <?php
 /**
  * Plugin Name:       IRONCREED Request Log
+ * Plugin URI:        https://github.com/IRONCREED/SECURITY/tree/main/plugins/ironcreed-request-log
  * Description:       Privacy-aware request logging for WordPress Runtime and opt-in Hosting Ukraine nginx logs.
  * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      8.0
  * Author:            IRONCREED
+ * Author URI:        https://web.zhovten.games/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Domain Path:       /languages
  * Text Domain:       ironcreed-request-log
  * Product ID:        ironcreed/request-log
  *
@@ -33,7 +36,7 @@ if ( isset( $GLOBALS['ironcreed_request_log_instance'] ) ) {
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				return;
 			}
-			$copies = $GLOBALS['ironcreed_request_log_conflict'] ?? array();
+			$copies  = $GLOBALS['ironcreed_request_log_conflict'] ?? array();
 			$message = sprintf(
 				/* translators: 1: first plugin basename, 2: conflicting plugin basename. */
 				__( 'Conflicting IRONCREED Request Log copies loaded: %1$s and %2$s. Keep one copy active.', 'ironcreed-request-log' ),

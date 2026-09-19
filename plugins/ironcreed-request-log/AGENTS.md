@@ -8,12 +8,13 @@ changes user-visible behavior, security, privacy, licensing, or release scope.
 Implement the numbered milestones in separate reviewable commits within one
 feature branch. Preserve version-1.0 scope. Version 1.0 includes the local
 WordPress Runtime Source and the opt-in `HostingUkraineApiProvider` defined in
-the brief. Do not add a local-file reader, another hosting provider, background
+the brief. Do not add a local-file reader, another hosting provider, unconsented background
 sync, live tail, export, telemetry, charts, or a companion-plugin dependency.
 
 Treat provider records as potentially personal data and provider credentials as
 secrets. Do not make a network request before an authorized administrator
-explicitly configures the connection and starts a test or fetch. Use
+explicitly configures the connection and starts a lookup, test or fetch, or explicitly enables scheduled imports.
+The 2026-09-16 product decision authorizes this opt-in extension. Use
 `docs/HOSTING-UKRAINE-API-CONTRACT.md` as the exact external contract for version
 1.0. Do not infer additional request fields or response behaviour. Document the
 verified external-service behavior in `readme.txt` and the Privacy Policy Guide.

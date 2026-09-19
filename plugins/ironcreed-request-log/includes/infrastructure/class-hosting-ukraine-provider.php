@@ -1,5 +1,9 @@
 <?php
-/** Hosting Ukraine nginx access-log provider. @package Ironcreed_Request_Log */
+/**
+ * Hosting Ukraine nginx access-log provider.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log\Infrastructure;
 
@@ -12,20 +16,40 @@ use RuntimeException;
 
 /** Reads the fixed, read-only Hosting Ukraine API method. */
 final class Hosting_Ukraine_Provider implements Provider {
-	public const ENDPOINT              = 'https://adm.tools/action/hosting/log/web/nginx/';
-	public const MAX_COMPRESSED_BYTES  = 33554432;
+	public const ENDPOINT               = 'https://adm.tools/action/hosting/log/web/nginx/';
+	public const MAX_COMPRESSED_BYTES   = 33554432;
 	public const MAX_DECOMPRESSED_BYTES = 134217728;
-	public const MAX_RECORDS           = 100000;
-	public const MAX_LINE_BYTES        = 16384;
+	public const MAX_RECORDS            = 100000;
+	public const MAX_LINE_BYTES         = 16384;
 
-	/** @var HTTP_Client */
+	/**
+	 * Bounded HTTP download adapter.
+	 *
+	 * @var HTTP_Client
+	 */
 	private HTTP_Client $client;
-	/** @var array<string,int> */
+	/**
+	 * Validated provider safety limits.
+	 *
+	 * @var array<string,int>
+	 */
 	private array $limits;
 
-	/** @param HTTP_Client $client HTTP adapter. @param array<string,int> $limits Testable local bounds. */
+	/**
+	 * Initialize the adapter dependencies.
+	 *
+	 * @param HTTP_Client       $client HTTP adapter.
+	 *
+	 * @param array<string,int> $limits Testable local bounds.
+	 * @throws RuntimeException When the operation cannot complete safely.
+	 */
 	public function __construct( HTTP_Client $client, array $limits = array() ) {
-		$defaults = array( 'compressed' => self::MAX_COMPRESSED_BYTES, 'decompressed' => self::MAX_DECOMPRESSED_BYTES, 'records' => self::MAX_RECORDS, 'line' => self::MAX_LINE_BYTES );
+		$defaults = array(
+			'compressed'   => self::MAX_COMPRESSED_BYTES,
+			'decompressed' => self::MAX_DECOMPRESSED_BYTES,
+			'records'      => self::MAX_RECORDS,
+			'line'         => self::MAX_LINE_BYTES,
+		);
 		if ( array_diff_key( $limits, $defaults ) ) {
 			throw new RuntimeException( 'The provider limit policy is invalid.' );
 		}
@@ -38,7 +62,14 @@ final class Hosting_Ukraine_Provider implements Provider {
 		$this->limits = array_merge( $defaults, $limits );
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param int    $host_id Positive hosting site ID.
+	 * @param string $token Bearer credential.
+	 * @throws RuntimeException When the operation cannot complete safely.
+	 * @throws Provider_Rate_Limit On a bounded provider retry delay.
+	 */
 	public function fetch_today( int $host_id, string $token ): iterable {
 		if ( $host_id < 1 || ! self::valid_token( $token ) ) {
 			throw new RuntimeException( 'Connection details are incomplete or invalid.' );
@@ -60,6 +91,16 @@ final class Hosting_Ukraine_Provider implements Provider {
 
 		$file = $response['file'];
 		try {
+			if ( 429 === $response['code'] ) {
+				require_once __DIR__ . '/class-provider-rate-limit.php';
+				$retry = 60;
+				foreach ( $response['headers'] as $name => $value ) {
+					if ( 'retry-after' === strtolower( (string) $name ) && is_numeric( $value ) ) {
+						$retry = max( 60, min( 86400, (int) $value ) );
+					}
+				}
+				throw new Provider_Rate_Limit( $retry );
+			}
 			if ( $response['code'] < 200 || $response['code'] >= 300 || $response['size'] > $this->limits['compressed'] || ! self::supported_content_type( $response['headers'] ) ) {
 				throw new RuntimeException( 'The provider returned an unusable response.' );
 			}
@@ -72,7 +113,11 @@ final class Hosting_Ukraine_Provider implements Provider {
 		}
 	}
 
-	/** Accept absent or explicitly supported binary response media types. */
+	/**
+	 * Accept absent or explicitly supported binary response media types.
+	 *
+	 * @param array $headers Provider response headers.
+	 */
 	private static function supported_content_type( array $headers ): bool {
 		$type = '';
 		foreach ( $headers as $name => $value ) {
@@ -85,13 +130,23 @@ final class Hosting_Ukraine_Provider implements Provider {
 		return '' === $type || in_array( $type, array( 'application/gzip', 'application/x-gzip', 'application/octet-stream' ), true );
 	}
 
-	/** Validate token conservatively without transforming it. */
+	/**
+	 * Validate token conservatively without transforming it.
+	 *
+	 * @param string $token Bearer credential.
+	 */
 	public static function valid_token( string $token ): bool {
 		return '' !== $token && strlen( $token ) <= 4096 && 1 !== preg_match( '/[\x00-\x20\x7F]/', $token );
 	}
 
-	/** Stream a gzip archive within decompressed and record limits. */
+	/**
+	 * Stream a gzip archive within decompressed and record limits.
+	 *
+	 * @param string $file Temporary downloaded archive.
+	 * @throws RuntimeException When the operation cannot complete safely.
+	 */
 	private function read_archive( string $file ): iterable {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Read the two-byte gzip signature from the local bounded download.
 		$header = file_get_contents( $file, false, null, 0, 2 );
 		if ( "\x1f\x8b" !== $header ) {
 			throw new RuntimeException( 'The provider returned an unusable archive.' );
@@ -102,8 +157,8 @@ final class Hosting_Ukraine_Provider implements Provider {
 			throw new RuntimeException( 'The provider returned an unusable archive.' );
 		}
 
-		$bytes = 0;
-		$count = 0;
+		$bytes   = 0;
+		$count   = 0;
 		$ordinal = 0;
 		try {
 			while ( ! gzeof( $stream ) ) {
@@ -140,7 +195,12 @@ final class Hosting_Ukraine_Provider implements Provider {
 		}
 	}
 
-	/** Discard the remainder of an oversized line. */
+	/**
+	 * Discard the remainder of an oversized line.
+	 *
+	 * @param resource $stream Open gzip stream.
+	 * @param int      $bytes  Decompressed bytes consumed so far.
+	 */
 	private function discard_line_remainder( $stream, int &$bytes ): void {
 		while ( ! gzeof( $stream ) ) {
 			$chunk = gzgets( $stream, $this->limits['line'] + 2 );
@@ -154,13 +214,18 @@ final class Hosting_Ukraine_Provider implements Provider {
 		}
 	}
 
-	/** Parse one nginx combined-log line. */
+	/**
+	 * Parse one nginx combined-log line.
+	 *
+	 * @param string $line Synthetic or provider log line.
+	 * @param int    $ordinal Record ordinal within the archive.
+	 */
 	private function parse_line( string $line, int $ordinal ): ?array {
 		if ( '' === $line || strlen( $line ) > $this->limits['line'] || ! wp_check_invalid_utf8( $line ) ) {
 			return null;
 		}
 
-		$quoted = '"((?:\\\\.|[^"\\\\])*)"';
+		$quoted  = '"((?:\\\\.|[^"\\\\])*)"';
 		$pattern = '/^(\S+) \S+ \S+ \[([^]]+)\] ' . $quoted . ' (\d{3}) (\d+|-) ' . $quoted . ' ' . $quoted . '$/D';
 		if ( 1 !== preg_match( $pattern, $line, $matches ) ) {
 			return null;
@@ -178,9 +243,12 @@ final class Hosting_Ukraine_Provider implements Provider {
 		}
 
 		$uri     = URI_Normalizer::normalize( $request_parts[2] );
-		$referer = '-' === $matches[6] ? array( 'path' => '', 'query' => '' ) : URI_Normalizer::normalize( self::unescape_nginx( $matches[6] ) );
+		$referer = '-' === $matches[6] ? array(
+			'path'  => '',
+			'query' => '',
+		) : URI_Normalizer::normalize( self::unescape_nginx( $matches[6] ) );
 
-		$event = Event::validate(
+		$event                         = Event::validate(
 			array(
 				'timestamp'      => $timestamp->getTimestamp(),
 				'method'         => $request_parts[1],
@@ -195,20 +263,24 @@ final class Hosting_Ukraine_Provider implements Provider {
 				'fingerprint'    => '',
 			)
 		);
-		$canonical = $event;
+		$canonical                     = $event;
 		$canonical['provider_ordinal'] = $ordinal;
-		$event['fingerprint'] = hash( 'sha256', (string) wp_json_encode( $canonical, JSON_UNESCAPED_SLASHES ) );
+		$event['fingerprint']          = hash( 'sha256', (string) wp_json_encode( $canonical, JSON_UNESCAPED_SLASHES ) );
 		return $event;
 	}
 
-	/** Decode nginx quoted-string escapes. */
+	/**
+	 * Decode nginx quoted-string escapes.
+	 *
+	 * @param string $value Untrusted input value.
+	 */
 	private static function unescape_nginx( string $value ): string {
 		return preg_replace_callback(
 			'/\\\\(x[0-9A-Fa-f]{2}|.)/s',
-			static function ( array $match ): string {
-				return str_starts_with( $match[1], 'x' )
-					? chr( hexdec( substr( $match[1], 1 ) ) )
-					: $match[1];
+			static function ( array $parts ): string {
+				return str_starts_with( $parts[1], 'x' )
+					? chr( hexdec( substr( $parts[1], 1 ) ) )
+					: $parts[1];
 			},
 			$value
 		) ?? '';

@@ -12,11 +12,30 @@ final class URI_Normalizer {
 	private const MAX_PATH  = 2048;
 	private const MAX_QUERY = 4096;
 
-	/** @var string[] Mandatory keys which filters cannot remove. */
+	/**
+	 * Mandatory sensitive query keys.
+	 *
+	 * @var string[] Mandatory keys which filters cannot remove.
+	 */
 	private const SENSITIVE = array(
-		'password', 'pass', 'pwd', 'token', 'access_token', 'refresh_token',
-		'api_key', 'apikey', 'secret', 'nonce', '_wpnonce', 'authorization',
-		'auth', 'key', 'signature', 'sig', 'code', 'email',
+		'password',
+		'pass',
+		'pwd',
+		'token',
+		'access_token',
+		'refresh_token',
+		'api_key',
+		'apikey',
+		'secret',
+		'nonce',
+		'_wpnonce',
+		'authorization',
+		'auth',
+		'key',
+		'signature',
+		'sig',
+		'code',
+		'email',
 	);
 
 	/**
@@ -31,7 +50,10 @@ final class URI_Normalizer {
 		$parts = wp_parse_url( $uri );
 
 		if ( false === $parts ) {
-			return array( 'path' => '/', 'query' => '' );
+			return array(
+				'path'  => '/',
+				'query' => '',
+			);
 		}
 
 		$path = self::truncate_encoded( (string) ( $parts['path'] ?? '/' ), self::MAX_PATH );
@@ -74,14 +96,22 @@ final class URI_Normalizer {
 		return self::truncate_encoded( implode( '&', $output ), self::MAX_QUERY );
 	}
 
-	/** @param string[] $additional Additional sensitive keys. */
+	/**
+	 * Initialize the adapter dependencies.
+	 *
+	 * @param string[] $additional Additional sensitive keys.
+	 */
 	private static function sensitive_keys( array $additional ): array {
 		$filtered = array_filter( $additional, 'is_string' );
 		$filtered = array_map( 'strtolower', $filtered );
 		return array_values( array_unique( array_merge( self::SENSITIVE, $filtered ) ) );
 	}
 
-	/** Decode nested and percent-encoded key syntax. */
+	/**
+	 * Decode nested and percent-encoded key syntax.
+	 *
+	 * @param string $key Encoded query parameter name.
+	 */
 	private static function decoded_key( string $key ): string {
 		for ( $iteration = 0; $iteration < 2; ++$iteration ) {
 			$decoded = rawurldecode( $key );
@@ -94,7 +124,11 @@ final class URI_Normalizer {
 		return self::clean_text( $key, 128 );
 	}
 
-	/** Return the root name from token, token[], or token[name]. */
+	/**
+	 * Return the root name from token, token[], or token[name].
+	 *
+	 * @param string $key Encoded query parameter name.
+	 */
 	private static function base_key( string $key ): string {
 		$position = strpos( $key, '[' );
 		if ( false !== $position ) {
@@ -104,14 +138,24 @@ final class URI_Normalizer {
 		return strtolower( $key );
 	}
 
-	/** Remove invalid text and apply a character bound. */
+	/**
+	 * Remove invalid text and apply a character bound.
+	 *
+	 * @param string $value Untrusted input value.
+	 * @param int    $length Maximum text length.
+	 */
 	private static function clean_text( string $value, int $length ): string {
 		$value = wp_check_invalid_utf8( $value, true );
 		$value = preg_replace( '/[\x00-\x1F\x7F]/', '', $value ) ?? '';
 		return mb_substr( $value, 0, $length, 'UTF-8' );
 	}
 
-	/** Truncate without leaving an incomplete percent escape. */
+	/**
+	 * Truncate without leaving an incomplete percent escape.
+	 *
+	 * @param string $value Untrusted input value.
+	 * @param int    $length Maximum text length.
+	 */
 	private static function truncate_encoded( string $value, int $length ): string {
 		$value = self::clean_text( $value, $length );
 		$value = preg_replace( '/%(?:[0-9A-Fa-f]?)$/', '', $value ) ?? '';

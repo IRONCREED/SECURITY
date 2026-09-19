@@ -9,3 +9,8 @@
 *.zip
 .DS_Store
 Thumbs.db
+
+# Development dependencies and diagnostic caches at any plugin depth.
+**/vendor/
+**/.phpunit.result.cache
+**/.phpcs-cache

@@ -1,14 +1,22 @@
 <?php
-/** Plugin lifecycle and Multisite batching. @package Ironcreed_Request_Log */
+/**
+ * Plugin lifecycle and Multisite batching.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log;
 
 /** Installs and removes site-local plugin state. */
 final class Lifecycle {
-	private const BATCH_SIZE = 100;
+	private const BATCH_SIZE  = 100;
 	private const RETRY_DELAY = 300;
 
-	/** Activate one site or every site in a network. */
+	/**
+	 * Activate one site or every site in a network.
+	 *
+	 * @param bool $network_wide Whether activation applies to the network.
+	 */
 	public static function activate( bool $network_wide = false ): void {
 		self::guard_activation();
 		if ( is_multisite() && $network_wide ) {
@@ -20,7 +28,11 @@ final class Lifecycle {
 		self::install_site_or_fail();
 	}
 
-	/** Deactivate one site or every site in a network. */
+	/**
+	 * Deactivate one site or every site in a network.
+	 *
+	 * @param bool $network_wide Whether activation applies to the network.
+	 */
 	public static function deactivate( bool $network_wide = false ): void {
 		if ( is_multisite() && $network_wide ) {
 			delete_site_option( 'ironcreed_request_log_network_active' );
@@ -31,7 +43,11 @@ final class Lifecycle {
 		self::deactivate_site();
 	}
 
-	/** Provision a new site created during network activation. */
+	/**
+	 * Provision a new site created during network activation.
+	 *
+	 * @param \WP_Site $site Newly initialized WordPress site.
+	 */
 	public static function initialize_new_site( \WP_Site $site ): void {
 		if ( '1' !== get_site_option( 'ironcreed_request_log_network_active', '0' ) ) {
 			return;
@@ -45,9 +61,13 @@ final class Lifecycle {
 		}
 	}
 
-	/** Create or update one site's schema and defaults. */
+	/**
+	 * Create or update one site's schema and defaults.
+	 */
 	public static function install_site(): bool {
-		if ( ! self::migrate_schema() ) return false;
+		if ( ! self::migrate_schema() ) {
+			return false;
+		}
 
 		add_option( 'ironcreed_request_log_enabled', '0', '', false );
 		add_option( 'ironcreed_request_log_retention', 24, '', false );
@@ -65,14 +85,23 @@ final class Lifecycle {
 		return true;
 	}
 
-	/** Apply schema upgrades during ordinary bootstrap as well as activation. */
+	/**
+	 * Apply schema upgrades during ordinary bootstrap as well as activation.
+	 */
 	public static function maybe_upgrade(): bool {
-		if ( '2' === get_option( 'ironcreed_request_log_schema', '' ) && '1' === get_option( 'ironcreed_request_log_storage_ready', '0' ) ) return true;
-		if ( time() < (int) get_option( 'ironcreed_request_log_migration_retry_after', 0 ) ) return false;
+		if ( '2' === get_option( 'ironcreed_request_log_schema', '' ) && '1' === get_option( 'ironcreed_request_log_storage_ready', '0' ) ) {
+			return true;
+		}
+		if ( time() < (int) get_option( 'ironcreed_request_log_migration_retry_after', 0 ) ) {
+			return false;
+		}
 		return self::migrate_schema();
 	}
 
-	/** Idempotently create schema 2 and migrate empty Runtime fingerprints. */
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery -- Plugin-owned schema migration must inspect and change the real database, without stale cache.
+	/**
+	 * Idempotently create schema 2 and migrate empty Runtime fingerprints.
+	 */
 	private static function migrate_schema(): bool {
 		global $wpdb;
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -102,27 +131,53 @@ final class Lifecycle {
 			KEY route_kind (route_kind)
 		) ENGINE=InnoDB {$collate};";
 		$changes = dbDelta( $sql );
-		$engine = $wpdb->get_var( $wpdb->prepare( 'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s', $table ) );
+		$engine  = $wpdb->get_var( $wpdb->prepare( 'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s', $table ) );
 		if ( is_string( $engine ) && 'InnoDB' !== $engine ) {
-			if ( false === $wpdb->query( "ALTER TABLE {$table} ENGINE=InnoDB" ) ) return self::storage_failure( 'engine-conversion-failed' );
+			if ( false === $wpdb->query( $wpdb->prepare( 'ALTER TABLE %i ENGINE=InnoDB', $table ) ) ) {
+				return self::storage_failure( 'engine-conversion-failed' );
+			}
 			$engine = $wpdb->get_var( $wpdb->prepare( 'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s', $table ) );
 		}
-		if ( ! is_array( $changes ) || 'InnoDB' !== $engine || '' !== $wpdb->last_error ) return self::storage_failure( 'schema-not-ready' );
-		if ( false === $wpdb->query( "ALTER TABLE {$table} MODIFY fingerprint char(64) NULL DEFAULT NULL" ) ) return self::storage_failure( 'fingerprint-schema-failed' );
-		if ( false === $wpdb->query( "UPDATE {$table} SET fingerprint = NULL WHERE source = 'wordpress-runtime' AND fingerprint = ''" ) ) return self::storage_failure( 'fingerprint-migration-failed' );
+		if ( ! is_array( $changes ) || 'InnoDB' !== $engine || '' !== $wpdb->last_error ) {
+			return self::storage_failure( 'schema-not-ready' );
+		}
+		if ( false === $wpdb->query( $wpdb->prepare( 'ALTER TABLE %i MODIFY fingerprint char(64) NULL DEFAULT NULL', $table ) ) ) {
+			return self::storage_failure( 'fingerprint-schema-failed' );
+		}
+		if ( false === $wpdb->query( $wpdb->prepare( "UPDATE %i SET fingerprint = NULL WHERE source = 'wordpress-runtime' AND fingerprint = ''", $table ) ) ) {
+			return self::storage_failure( 'fingerprint-migration-failed' );
+		}
 		$nullable = $wpdb->get_var( $wpdb->prepare( "SELECT IS_NULLABLE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s AND COLUMN_NAME = 'fingerprint'", $table ) );
-		if ( 'YES' !== $nullable ) return self::storage_failure( 'fingerprint-schema-unverified' );
-		if ( ! update_option( 'ironcreed_request_log_schema', '2', false ) && '2' !== get_option( 'ironcreed_request_log_schema', '' ) ) return self::storage_failure( 'schema-version-write-failed' );
-		if ( ! update_option( 'ironcreed_request_log_storage_ready', '1', false ) && '1' !== get_option( 'ironcreed_request_log_storage_ready', '0' ) ) return self::storage_failure( 'readiness-write-failed' );
+		if ( 'YES' !== $nullable ) {
+			return self::storage_failure( 'fingerprint-schema-unverified' );
+		}
+		if ( ! update_option( 'ironcreed_request_log_schema', '2', false ) && '2' !== get_option( 'ironcreed_request_log_schema', '' ) ) {
+			return self::storage_failure( 'schema-version-write-failed' );
+		}
+		if ( ! update_option( 'ironcreed_request_log_storage_ready', '1', false ) && '1' !== get_option( 'ironcreed_request_log_storage_ready', '0' ) ) {
+			return self::storage_failure( 'readiness-write-failed' );
+		}
 		delete_option( 'ironcreed_request_log_storage_diagnostic' );
 		delete_option( 'ironcreed_request_log_migration_retry_after' );
 		return true;
 	}
 
+	// phpcs:enable WordPress.DB.DirectDatabaseQuery
+
+	/**
+	 * Prepare storage or stop activation with a safe error.
+	 */
 	public static function install_site_or_fail(): void {
-		if ( ! self::install_site() ) wp_die( esc_html__( 'Request Log storage could not be prepared safely. Review the storage diagnostic and try again.', 'ironcreed-request-log' ), '', array( 'response' => 500 ) );
+		if ( ! self::install_site() ) {
+			wp_die( esc_html__( 'Request Log storage could not be prepared safely. Review the storage diagnostic and try again.', 'ironcreed-request-log' ), '', array( 'response' => 500 ) );
+		}
 	}
 
+	/**
+	 * Record a safe storage diagnostic and report failure.
+	 *
+	 * @param string $code Safe diagnostic code.
+	 */
 	private static function storage_failure( string $code ): bool {
 		update_option( 'ironcreed_request_log_storage_ready', '0', false );
 		update_option( 'ironcreed_request_log_storage_diagnostic', sanitize_key( $code ), false );
@@ -130,12 +185,17 @@ final class Lifecycle {
 		return false;
 	}
 
-	/** Clear one site's scheduled work. */
+	/**
+	 * Clear one site's scheduled work.
+	 */
 	public static function deactivate_site(): void {
 		wp_clear_scheduled_hook( 'ironcreed_request_log_cleanup' );
+		wp_clear_scheduled_hook( 'ironcreed_request_log_import' );
 	}
 
-	/** Remove all state from every site during uninstall. */
+	/**
+	 * Remove all state from every site during uninstall.
+	 */
 	public static function uninstall_network(): void {
 		if ( is_multisite() ) {
 			self::each_site( array( self::class, 'uninstall_site' ) );
@@ -146,13 +206,16 @@ final class Lifecycle {
 		self::uninstall_site();
 	}
 
-	/** Remove all state from one site. */
+	/**
+	 * Remove all state from one site.
+	 */
 	public static function uninstall_site(): void {
 		global $wpdb;
 		$table = $wpdb->prefix . 'ironcreed_request_log_events';
-		$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Uninstall removes the plugin-owned table using an identifier placeholder.
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table ) );
 
-		foreach ( array( 'schema', 'storage_ready', 'storage_diagnostic', 'migration_retry_after', 'enabled', 'retention', 'cap', 'credentials', 'runtime_diagnostic', 'cleanup_diagnostic' ) as $suffix ) {
+		foreach ( array( 'schema', 'storage_ready', 'storage_diagnostic', 'migration_retry_after', 'enabled', 'retention', 'cap', 'credentials', 'runtime_diagnostic', 'cleanup_diagnostic', 'import_interval', 'import_status' ) as $suffix ) {
 			delete_option( 'ironcreed_request_log_' . $suffix );
 		}
 		self::deactivate_site();
@@ -164,7 +227,9 @@ final class Lifecycle {
 		}
 	}
 
-	/** Reject activation when any active path declares this Product ID. */
+	/**
+	 * Reject activation when any active path declares this Product ID.
+	 */
 	private static function guard_activation(): void {
 		$plugins = (array) get_option( 'active_plugins', array() );
 		if ( is_multisite() ) {
@@ -188,7 +253,11 @@ final class Lifecycle {
 		}
 	}
 
-	/** Visit every site in bounded ID batches. */
+	/**
+	 * Visit every site in bounded ID batches.
+	 *
+	 * @param callable $callback Site-local operation.
+	 */
 	private static function each_site( callable $callback ): void {
 		$offset = 0;
 		do {
@@ -200,14 +269,15 @@ final class Lifecycle {
 				)
 			);
 			foreach ( $site_ids as $site_id ) {
-			switch_to_blog( (int) $site_id );
-			try {
-				call_user_func( $callback );
-			} finally {
-				restore_current_blog();
+				switch_to_blog( (int) $site_id );
+				try {
+					call_user_func( $callback );
+				} finally {
+					restore_current_blog();
+				}
 			}
-			}
-			$offset += self::BATCH_SIZE;
-		} while ( self::BATCH_SIZE === count( $site_ids ) );
+			$offset    += self::BATCH_SIZE;
+			$site_count = count( $site_ids );
+		} while ( self::BATCH_SIZE === $site_count );
 	}
 }

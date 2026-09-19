@@ -48,7 +48,7 @@ final class Iron_Warden_Test_Driver {
 	}
 
 	public static function run_historical_suite( string $suite ): void {
-		if ( ! in_array( $suite, array( 'provider', 'runtime', 'storage', 'warden', 'provider-v4', 'runtime-v3', 'storage-v4', 'warden-v4' ), true ) ) throw new RuntimeException( 'Unknown historical suite.' );
+		if ( ! in_array( $suite, array( 'provider', 'runtime', 'storage', 'warden', 'provider-v4', 'runtime-v3', 'storage-v4', 'storage-v5', 'warden-v4', 'admin-refresh-v1' ), true ) ) throw new RuntimeException( 'Unknown historical suite.' );
 		self::phpunit( self::plugin_root() . '/tests/historical/' . $suite . '/phpunit.xml' );
 	}
 
@@ -63,6 +63,7 @@ final class Iron_Warden_Test_Driver {
 		$map = array( 'IRON_WARDEN_MULTISITE_TEST_COMMAND' => 'multisite-current' );
 		if ( ! isset( $map[ $variable ] ) ) throw new RuntimeException( 'Unknown integration boundary.' );
 		$status = self::command( escapeshellarg( PHP_BINARY ) . ' ' . escapeshellarg( self::repository_root() . '/constitutional-guard/testing-interface/integration-runner.php' ) . ' ' . escapeshellarg( $map[ $variable ] ), $output );
+		if ( 2 === $status ) { fwrite( STDERR, "The typed WordPress testing environment is unavailable.\n" ); exit( 2 ); }
 		if ( 0 !== $status ) throw new RuntimeException( $output ?: 'WordPress testing boundary failed.' );
 	}
 }

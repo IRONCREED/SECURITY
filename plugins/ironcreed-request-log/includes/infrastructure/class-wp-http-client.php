@@ -1,5 +1,9 @@
 <?php
-/** WordPress HTTP adapter. @package Ironcreed_Request_Log */
+/**
+ * WordPress HTTP adapter.
+ *
+ * @package Ironcreed_Request_Log
+ */
 
 namespace Ironcreed\Request_Log\Infrastructure;
 
@@ -8,7 +12,13 @@ use RuntimeException;
 
 /** Downloads provider responses through the safe WordPress HTTP API. */
 final class WP_HTTP_Client implements HTTP_Client {
-	/** {@inheritDoc} */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param string $url Fixed provider HTTPS endpoint.
+	 * @param array  $arguments Bounded WordPress HTTP arguments.
+	 * @throws RuntimeException When the operation cannot complete safely.
+	 */
 	public function download( string $url, array $arguments ): array {
 		$file = wp_tempnam( 'ironcreed-request-log-provider' );
 		if ( ! $file ) {

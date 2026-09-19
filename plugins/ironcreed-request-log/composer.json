@@ -8,14 +8,17 @@
   },
   "require-dev": {
     "phpcompatibility/phpcompatibility-wp": "2.1.8",
-    "phpunit/phpunit": "9.6.23",
-    "wp-coding-standards/wpcs": "3.2.0"
+    "phpunit/phpunit": "9.6.33",
+    "wp-coding-standards/wpcs": "3.4.1"
   },
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     },
-    "sort-packages": true
+    "sort-packages": true,
+    "platform": {
+      "php": "8.0.0"
+    }
   },
   "scripts": {
     "lint": "phpcs --standard=phpcs.xml.dist",

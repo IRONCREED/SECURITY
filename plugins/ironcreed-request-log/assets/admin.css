@@ -1,0 +1,92 @@
+.ironcreed-request-log {
+	max-width: 80rem;
+}
+.ironcreed-request-log .nav-tab-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25rem;
+}
+.ironcreed-request-log .nav-tab {
+	margin-left: 0;
+}
+.ironcreed-request-log .icrl-card {
+	margin-top: 1.25rem;
+	padding: 1.25rem 1.5rem;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+.ironcreed-request-log .icrl-card h2 {
+	margin-top: 0;
+}
+.ironcreed-request-log .icrl-fields,
+.ironcreed-request-log .icrl-actions,
+.ironcreed-request-log .icrl-token-row,
+.ironcreed-request-log .icrl-modes {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: .75rem;
+	margin: 1rem 0;
+}
+.ironcreed-request-log .icrl-fields label {
+	display: grid;
+	gap: .4rem;
+}
+.ironcreed-request-log .icrl-modes legend {
+	margin-bottom: .5rem;
+	font-weight: 600;
+}
+.ironcreed-request-log .icrl-modes label {
+	padding: .65rem 1rem;
+	border: 1px solid #c3c4c7;
+	border-radius: 3px;
+}
+.ironcreed-request-log input[type="password"],
+.ironcreed-request-log input[type="text"] {
+	width: 22rem;
+	max-width: 100%;
+}
+.ironcreed-request-log .icrl-help-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	border: 1px solid currentColor;
+	border-radius: 50%;
+	text-decoration: none;
+	font-weight: 600;
+}
+.ironcreed-request-log .icrl-status {
+	margin: 1rem 0;
+	padding: .1rem 1rem;
+	border-left: 4px solid #2271b1;
+	background: #f6f7f7;
+}
+.ironcreed-request-log .icrl-faq details {
+	border-top: 1px solid #dcdcde;
+	padding: .9rem 0;
+}
+.ironcreed-request-log .icrl-faq summary {
+	cursor: pointer;
+	font-weight: 600;
+}
+.ironcreed-request-log .icrl-faq p {
+	max-width: 75ch;
+	line-height: 1.7;
+}
+.ironcreed-request-log .widefat td {
+	overflow-wrap: anywhere;
+}
+.ironcreed-request-log .icrl-table-scroll {
+	overflow-x: auto;
+}
+@media (max-width: 600px) {
+	.ironcreed-request-log .icrl-card {
+		padding: 1rem;
+	}
+	.ironcreed-request-log .icrl-token-row > label {
+		flex-basis: 100%;
+	}
+}

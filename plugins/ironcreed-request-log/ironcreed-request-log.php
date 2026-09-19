@@ -1,11 +1,13 @@
 <?php
 /**
  * Plugin Name:       IRONCREED Request Log
+ * Plugin URI:        https://github.com/IRONCREED/SECURITY/tree/main/plugins/ironcreed-request-log
  * Description:       Privacy-aware request logging for WordPress Runtime and opt-in Hosting Ukraine nginx logs.
  * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      8.0
  * Author:            IRONCREED
+ * Author URI:        https://web.zhovten.games/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Domain Path:       /languages

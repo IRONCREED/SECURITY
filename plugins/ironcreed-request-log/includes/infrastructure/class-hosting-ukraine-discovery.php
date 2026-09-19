@@ -13,7 +13,7 @@ use RuntimeException;
 /** Resolves a hosting virtual host from a domain using the fixed API. */
 final class Hosting_Ukraine_Discovery {
 
-	public const ENDPOINT   = 'https://adm.tools/action/get_id/';
+	public const ENDPOINT   = 'https://adm.tools/action/get_services/';
 	private const MAX_BYTES = 65536;
 
 	/**
@@ -57,7 +57,10 @@ final class Hosting_Ukraine_Discovery {
 	}
 
 	/**
-	 * Resolve exactly one site ID; never infer account/user IDs.
+	 * Resolve exactly one site ID from the token-visible host-service list.
+	 *
+	 * The provider receives only type=host. The administrator-entered domain is
+	 * matched locally against response[].host and is never sent as a lookup field.
 	 *
 	 * @param string $domain Hosting site domain.
 	 * @param string $token  Bearer credential.
@@ -80,7 +83,6 @@ final class Hosting_Ukraine_Discovery {
 					'Accept'        => 'application/json',
 				),
 				'body'                => array(
-					'name' => $domain,
 					'type' => 'host',
 				),
 			)
@@ -93,15 +95,71 @@ final class Hosting_Ukraine_Discovery {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reads only a bounded local temporary response.
 			$body = file_get_contents( $file, false, null, 0, self::MAX_BYTES + 1 );
 			$data = is_string( $body ) && strlen( $body ) <= self::MAX_BYTES ? json_decode( $body, true, 16 ) : null;
-			$id   = is_array( $data ) && false !== ( $data['result'] ?? true ) ? ( $data['response']['host_id'] ?? null ) : null;
-			if ( ! ( is_int( $id ) || is_string( $id ) ) || false === filter_var( $id, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) ) ) {
-				throw new RuntimeException( 'No unambiguous hosting site ID was returned.' );
+			if (
+				! is_array( $data )
+				|| true !== ( $data['result'] ?? null )
+				|| ! isset( $data['response'] )
+				|| ! is_array( $data['response'] )
+			) {
+				throw new RuntimeException( 'The site service lookup returned an unusable response.' );
 			}
-			return (int) $id;
+			return self::match_service_id( $data['response'], $domain );
 		} finally {
 			if ( is_file( $file ) ) {
 				wp_delete_file( $file );
 			}
 		}
+	}
+
+	/**
+	 * Match one service by exact host first, then by one leading www alias.
+	 *
+	 * @param array<int,mixed> $services Provider host-service list.
+	 * @param string           $domain   Normalized requested domain.
+	 * @return int Positive hosting site ID.
+	 * @throws RuntimeException When no unique service can be selected.
+	 */
+	private static function match_service_id( array $services, string $domain ): int {
+		$exact   = array();
+		$aliases = array();
+
+		foreach ( $services as $service ) {
+			if (
+				! is_array( $service )
+				|| ! isset( $service['host'], $service['id'] )
+				|| ! is_string( $service['host'] )
+			) {
+				continue;
+			}
+			$host = self::domain( $service['host'] );
+			$id   = is_int( $service['id'] ) || is_string( $service['id'] )
+				? filter_var( $service['id'], FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) )
+				: false;
+			if ( '' === $host || false === $id ) {
+				continue;
+			}
+
+			if ( $host === $domain ) {
+				$exact[] = (int) $id;
+			} elseif ( self::without_www( $host ) === self::without_www( $domain ) ) {
+				$aliases[] = (int) $id;
+			}
+		}
+
+		$candidates = $exact ? $exact : $aliases;
+		$candidates = array_values( array_unique( $candidates ) );
+		if ( 1 !== count( $candidates ) ) {
+			throw new RuntimeException( 'No unambiguous hosting site ID was returned.' );
+		}
+		return $candidates[0];
+	}
+
+	/**
+	 * Remove one conventional www label for a bounded fallback comparison.
+	 *
+	 * @param string $domain Normalized ASCII domain.
+	 */
+	private static function without_www( string $domain ): string {
+		return str_starts_with( $domain, 'www.' ) ? substr( $domain, 4 ) : $domain;
 	}
 }

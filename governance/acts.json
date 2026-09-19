@@ -28,9 +28,9 @@
       "id": "ics-act-wordpress-development-001",
       "type": "legislation",
       "title": "WordPress Plugin Development Act",
-      "revision": "0.4.0",
+      "revision": "0.4.1",
       "status": "active",
-      "effectiveDate": "2026-09-16",
+      "effectiveDate": "2026-09-18",
       "path": "governance/legislation/WORDPRESS_PLUGIN_DEVELOPMENT.md",
       "basis": [
         "ics-constitution-adoption-001",
@@ -41,9 +41,9 @@
       "id": "ics-brief-request-log-001",
       "type": "implementation-brief",
       "title": "IRONCREED Request Log implementation brief",
-      "revision": "0.4.0",
+      "revision": "0.4.1",
       "status": "approved-for-implementation",
-      "effectiveDate": "2026-09-16",
+      "effectiveDate": "2026-09-18",
       "path": "plugins/ironcreed-request-log/IMPLEMENTATION-BRIEF.md",
       "basis": [
         "ics-profile-001",
@@ -60,6 +60,19 @@
       "path": "governance/decisions/REQUEST-LOG-UX-2026-09-16.md",
       "basis": [
         "ics-profile-001",
+        "ics-act-wordpress-development-001"
+      ]
+    },
+    {
+      "id": "ics-decision-request-log-discovery-001",
+      "type": "product-decision",
+      "title": "Request Log Hosting Ukraine service discovery correction",
+      "revision": "1.0.0",
+      "status": "active",
+      "effectiveDate": "2026-09-18",
+      "path": "governance/decisions/REQUEST-LOG-DISCOVERY-API-2026-09-18.md",
+      "basis": [
+        "ics-decision-request-log-ux-001",
         "ics-act-wordpress-development-001"
       ]
     }

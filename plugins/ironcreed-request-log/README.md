@@ -11,6 +11,18 @@ This directory is licensed under `GPL-2.0-or-later` by the root override. A
 release-ready implementation must include its own GPL notice and
 WordPress.org-compatible `readme.txt`.
 
+## Public source and WordPress.org assets
+
+The canonical public source for this plugin is:
+`https://github.com/IRONCREED/SECURITY/tree/main/plugins/ironcreed-request-log`.
+
+`wordpress-org-assets/` contains presentation assets for the WordPress.org
+Plugin Directory, such as `icon-128x128.png` and `icon-256x256.png`. These
+files belong in the top-level `/assets` directory of the WordPress.org SVN
+checkout and are intentionally excluded from the installable plugin ZIP.
+The distribution builder below uses an explicit allowlist and does not package
+that directory.
+
 ## Install a test package from this repository
 
 This directory is the development source, not an installable distribution.

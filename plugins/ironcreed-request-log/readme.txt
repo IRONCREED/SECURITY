@@ -21,6 +21,8 @@ Both sources start disabled. Records use bounded retention and count limits. Sen
 
 The plugin has no telemetry, advertising, export, live tail, public endpoint, alternate updater, or local-file reader. It never sends fetched logs to IRONCREED or another service.
 
+Development source, tests, build tooling, and release documentation are maintained at [IRONCREED/SECURITY](https://github.com/IRONCREED/SECURITY/tree/main/plugins/ironcreed-request-log).
+
 == Installation ==
 
 1. Install and activate the distribution ZIP in WordPress. For a source checkout, use tools/build.sh as described in the repository README; do not ZIP the development directory with its tests and tools.
@@ -33,9 +35,9 @@ On Multisite, each site stores and displays its own records. Uninstall removes r
 
 == External services ==
 
-The optional Hosting Ukraine integration calls `https://adm.tools/action/hosting/log/web/nginx/` when an authorized administrator explicitly tests/fetches or separately enables scheduled imports. The read-only site lookup calls https://adm.tools/action/get_id/ with the entered domain, type=host, and Bearer token. The request sends the saved Bearer token in the Authorization header and the Hosting Ukraine host ID in the request body. The response is a gzip nginx access-log archive that may contain timestamps, IP addresses, methods, URIs, statuses, response sizes, User-Agent values, and Referer values. Imported records are retained in the local WordPress database. Disconnect deletes credentials, cancels future scheduled imports, and leaves imported records until retention expiry or manual clearing.
+The optional Hosting Ukraine integration calls `https://adm.tools/action/hosting/log/web/nginx/` when an authorized administrator explicitly tests/fetches or separately enables scheduled imports. The read-only site lookup calls `https://adm.tools/action/get_services/` with `type=host` and the Bearer token. It receives the host services available to that token, matches the entered domain locally, and uses the matching service `id` as `host_id`; `account_id` and `virtual_domain_id` are not used as substitutes. The discovery list is not stored. Test/import requests send the saved Bearer token in the Authorization header and the matched Hosting Ukraine host ID in the request body. The log response is a gzip nginx access-log archive that may contain timestamps, IP addresses, methods, URIs, statuses, response sizes, User-Agent values, and Referer values. Imported records are retained in the local WordPress database. Disconnect deletes credentials, cancels future scheduled imports, and leaves imported records until retention expiry or manual clearing.
 
-Review the [API method](https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx), [access-log documentation](https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/), [Terms of Service](https://www.ukraine.com.ua/legal/tos/), [public offer](https://www.ukraine.com.ua/legal/publicoffer/), and [Privacy Policy](https://www.ukraine.com.ua/legal/privacypolicy/) before connecting.
+Review the [API method](https://adm.tools/user/api/#/tab-sandbox/hosting/log/web/nginx), [general API guide](https://www.ukraine.com.ua/wiki/account/api/), [access-log documentation](https://www.ukraine.com.ua/wiki/hosting/sites/my-sites/access-log/), [Terms of Service](https://www.ukraine.com.ua/legal/tos/), [public offer](https://www.ukraine.com.ua/legal/publicoffer/), and [Privacy Policy](https://www.ukraine.com.ua/legal/privacypolicy/) before connecting.
 
 == Frequently Asked Questions ==
 

@@ -27,22 +27,24 @@ PHPUnit/WPCS versions and a clean Composer audit.
 
 ## Validation
 
-- Current PHPUnit: 76 tests, 687 assertions.
-- Five active historical PHPUnit suites: 72 tests, 674 assertions.
-- Total: 148 tests, 1,361 assertions, using locked PHPUnit 9.6.33.
-- WPCS 3.4.1: zero errors and warnings; PHPCompatibilityWP 2.1.8: passed.
-- PHP syntax, source package assertions, repository contracts and translation parity: passed.
-- All previously accepted historical files/dependencies remain byte-identical.
-- A separate protected regression verifies that missing/incomplete WordPress test paths are unavailable.
-- Migration fixtures no longer require root filesystem write permissions; the
-  protected storage-v5 successor is exercised separately on PHP 8.0 and 8.4 in CI.
-- GitHub Governance passed. Request Log CI on PHP 8.0.30 and 8.4.25 passed current
-  PHPUnit (76 tests / 687 assertions per job), storage-v5 (14 / 66), integrity,
-  syntax, WPCS, compatibility, package and translation checks.
-- Full WARDEN remains pending for WordPress, Multisite and MySQL integration environments.
-  Consequently the Request Log workflow still returns nonzero; no mandatory gate is waived.
-- No production ZIP was produced. Installed-package smoke, official Plugin Check,
-  authenticated domain lookup/scheduled fetch and visual/accessibility review remain pending.
+The corrected working tree based on `f7d96788cea1d4b587bfaf80ba85ce269ad34f32`
+passed current PHPUnit (77 tests / 695 assertions) and the protected
+`admin-refresh-v2` successor (25 tests / 108 assertions) with locked PHPUnit
+9.6.33. WPCS 3.4.1, PHPCompatibilityWP 2.1.8, PHP syntax, repository validation,
+package source assertions, the 128-string English/Ukrainian catalog, credential
+scan and WARDEN integrity also passed locally on PHP 8.3.6 and Composer 2.7.1.
+
+The full WARDEN run completed with `COMPOSER_PROCESS_TIMEOUT=0`. Every available
+gate passed. The historical prebuild corpus, current WordPress integration,
+Multisite and concurrent-storage integration gates were unavailable because their
+typed test environments were not configured, so phase and release status remain
+**PENDING** and `composer check` correctly returned nonzero. No production ZIP has
+been certified.
+
+The 2026-09-17 GitHub CI evidence remains evidence for the pre-correction tree.
+Corrected-source GitHub CI, installed-package smoke, official Plugin Check, live
+`get_services` discovery/scheduled fetch and visual/accessibility review remain
+pending.
 
 See `docs/REQUEST-LOG-UX-VERIFICATION.md` for the precise scope and remaining checks.
 
@@ -52,5 +54,7 @@ WordPress Runtime is opt-in and sees requests that load WordPress. Hosting Ukrai
 imports the provider's nginx archive and remains read-only toward the host.
 Opening an admin page and activation cause no provider request. Lookup/test/fetch
 are explicit administrator actions; periodic downloads require separate consent,
-as authorized by `ics-decision-request-log-ux-001`. No local log reader, additional
-provider, export or telemetry is introduced. This draft is not a release candidate.
+as authorized by `ics-decision-request-log-ux-001`. The corrected service-discovery
+contract is authorized by `ics-decision-request-log-discovery-001`. No local log
+reader, additional provider, export or telemetry is introduced. This draft is not
+a release candidate.

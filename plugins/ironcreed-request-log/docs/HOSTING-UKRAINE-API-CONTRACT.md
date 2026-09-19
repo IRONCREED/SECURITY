@@ -1,10 +1,12 @@
 # Hosting Ukraine API contract for version 1.0
 
 Log-download contract: reviewed from authenticated documentation on 2026-08-28;
-pilot import confirmed by the operator on 2026-09-16. Domain-lookup contract:
-reviewed against the public provider example on 2026-09-16; authenticated lookup
-smoke remains pending. This document is intentionally secret-free. It is the normative
-external-service contract for `HostingUkraineApiProvider` in version 1.0.
+pilot import confirmed by the operator on 2026-09-16. Domain-discovery contract:
+corrected on 2026-09-18 after the current authenticated API documentation and the
+provider's 2025 changelog confirmed that `get_services` replaced `get_id` for
+service IDs. The authenticated request/response shape was confirmed by the operator;
+a post-correction plugin smoke test remains pending. This document is intentionally
+secret-free and is the normative external-service contract for version 1.0.
 
 ## Request
 
@@ -101,26 +103,34 @@ tests together if the contract changes.
 
 ## Domain lookup
 
-The fixed read-only method is POST https://adm.tools/action/get_id/ with the same
-Bearer header and form fields name=<ASCII-domain> and type=host. Read only
-response.host_id as a positive integer. Do not substitute account_id,
-virtual_domain_id, the panel user ID or a WordPress blog ID. The public example
-is the provider forum response of 2021-06-09:
-<https://www.ukraine.com.ua/forum/pozhelaniya-i-predlozheniya/Konsol-v-ChatBote-Telegram.html>.
-The current guide also documents get_id for a different object type (domain);
-that DNS identifier is not used by this adapter.
+The fixed read-only method is POST https://adm.tools/action/get_services/ with the
+same Bearer header and the single form field type=host. The provider's March 2025
+changelog records `get_services` as the replacement for `get_id` when obtaining
+service IDs. The response is JSON with `result=true` and a `response` list of host
+services available to the token. A host item may include `id`, `host`,
+`virtual_domain_id` and `account_id`.
 
-The discovery response is bounded to 64 KiB, decoded as JSON, and never shown raw.
-Redirects, missing/ambiguous IDs, explicit failure, malformed JSON and oversized
-bodies fail without modifying saved credentials. HTTP timeout is 20 seconds.
-Only an explicit Connect/Test action may perform lookup. Read-only JSON discovery
-and gzip log downloads have distinct parsers. Temporary responses are removed.
+The administrator-entered domain is not sent as a lookup parameter. Request Log
+normalizes it locally and first requires an exact `response[].host` match. If no
+exact match exists, a single leading `www.` may be ignored only when that fallback
+selects exactly one service. The matching positive `response[].id` becomes the
+`host_id` used by the nginx log method. `account_id`, `virtual_domain_id`, the
+panel user ID and WordPress blog IDs are never substituted for `host_id`.
+Missing, malformed or ambiguous matches fail closed.
+
+The discovery response is bounded to 64 KiB, decoded as JSON, and never shown raw
+or persisted. Redirects, explicit failure, malformed JSON and oversized bodies
+fail without modifying saved credentials. HTTP timeout is 20 seconds. Only an
+explicit Connect/Test action may perform discovery. Read-only JSON discovery and
+gzip log downloads have distinct parsers. Temporary responses are removed.
 
 For a Multisite network using one hosting virtual host, suggest the main site's
 domain. Mapped domains on distinct virtual hosts need operator-confirmed IDs.
-Credentials, schedules and records remain site-local. Public-source review is
-not authenticated evidence. Recheck lookup against the panel before release;
-never use screenshot tokens.
+Credentials, schedules and records remain site-local. Recheck discovery against
+the authenticated panel before release; never use screenshot tokens.
+
+Provider change log:
+<https://www.ukraine.com.ua/changelog/2025/>
 
 Current public API guide:
 <https://www.ukraine.com.ua/wiki/account/api/>.

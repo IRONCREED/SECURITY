@@ -40,7 +40,7 @@ final class Settings_View {
 			<h2><?php esc_html_e( 'Connection', 'ironcreed-request-log' ); ?></h2>
 			<label for="icrl-provider"><?php esc_html_e( 'Provider adapter', 'ironcreed-request-log' ); ?></label>
 			<select id="icrl-provider"><option value="hosting-ukraine"><?php esc_html_e( 'Hosting Ukraine API', 'ironcreed-request-log' ); ?></option></select>
-			<p class="description"><?php esc_html_e( 'Lookup sends your domain and token to adm.tools. Test and import send the hosting site ID and token and download logs that may contain personal data. The saved token stays hidden.', 'ironcreed-request-log' ); ?> <?php Help_View::link( 'privacy', __( 'External service and privacy', 'ironcreed-request-log' ) ); ?></p>
+			<p class="description"><?php esc_html_e( 'Lookup sends your token and type=host to adm.tools, receives the host services available to that token, and matches the entered domain locally. Test and import send the hosting site ID and token and download logs that may contain personal data. The saved token stays hidden.', 'ironcreed-request-log' ); ?> <?php Help_View::link( 'privacy', __( 'External service and privacy', 'ironcreed-request-log' ) ); ?></p>
 			<form class="icrl-connection" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 				<?php wp_nonce_field( 'ironcreed_request_log_connection' ); ?>
 				<fieldset class="icrl-modes">

@@ -44,7 +44,7 @@ final class Help_View {
 			),
 			'panel'     => array(
 				__( 'Where is the API documentation in Hosting Ukraine?', 'ironcreed-request-log' ),
-				__( 'Open API → Documentation. Under Hosting, inspect the hosting accounts, My sites and Logs methods. The site-list example requires the hosting account ID. The get_id method can resolve a hosting site by its domain with type=host. Manual request examples can include your active token: remove it before sharing screenshots or code.', 'ironcreed-request-log' ),
+				__( 'Open API → Documentation. Under Hosting, inspect the services and Logs methods. The get_services method with type=host returns the host services available to the token. Request Log matches the entered domain locally and uses the matching service id as host_id. Manual request examples can include your active token: remove it before sharing screenshots or code.', 'ironcreed-request-log' ),
 			),
 			'multisite' => array(
 				__( 'Which domain should Multisite use?', 'ironcreed-request-log' ),
@@ -68,7 +68,7 @@ final class Help_View {
 			),
 			'privacy'   => array(
 				__( 'What is sent to the external service?', 'ironcreed-request-log' ),
-				__( 'Lookup sends the domain and Bearer token only to adm.tools. Test and import send the hosting site ID and token there. Logs may include IP addresses, URIs, response sizes, User-Agent and Referer. Imported data stays in the WordPress database under the configured retention and access controls. IRONCREED receives no logs. Activation and opening this screen make no provider request.', 'ironcreed-request-log' ),
+				__( 'Lookup sends the Bearer token and type=host to adm.tools, receives the accessible host-service list, and matches the entered domain locally. The returned list may include service IDs, hostnames, account IDs and virtual-domain IDs; Request Log uses only the matched service id as host_id and does not store the discovery list. Test and import send the hosting site ID and token there. Logs may include IP addresses, URIs, response sizes, User-Agent and Referer. Imported data stays in the WordPress database under the configured retention and access controls. IRONCREED receives no logs. Activation and opening this screen make no provider request.', 'ironcreed-request-log' ),
 			),
 		);
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only FAQ navigation, checked against known section IDs.

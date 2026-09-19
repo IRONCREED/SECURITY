@@ -163,3 +163,18 @@ scope в актуальной API-документации.
 opt-in периодический импорт. Исходные выводы о manual-only границе заменены этим
 решением. Проверка нового authenticated lookup, consent UI, WP-Cron и локализации
 остаётся обязательной перед release; актуальный контракт хранится в API-CONTRACT.
+
+## Дополнение от 2026-09-18
+
+Решение `ics-decision-request-log-discovery-001` исправляет внешний контракт
+discovery после подтверждения актуального Hosting Ukraine API. Вместо `get_id`
+используется `get_services` с `type=host`. Введённый домен не передаётся как
+lookup-параметр: provider получает Bearer token, возвращает доступные token
+хостинговые услуги, а Request Log локально выбирает запись по `host` и использует
+её positive `id` как `host_id`.
+
+Discovery временно получает более широкий список metadata, который может содержать
+`host`, service `id`, `account_id` и `virtual_domain_id`. Список не сохраняется и
+не выводится. В event storage эти metadata не добавляются. Disclosure должен прямо
+различать discovery и log import: первый получает список услуг для локального
+сопоставления, второй отправляет выбранный `host_id` и получает nginx access log.

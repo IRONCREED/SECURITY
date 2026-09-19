@@ -2,7 +2,7 @@
 
 Идентификатор: `ics-act-wordpress-development-001`.
 
-Редакция: `0.4.0`.
+Редакция: `0.4.1`.
 
 Дата принятия: 2026-08-28.
 
@@ -108,7 +108,12 @@ dependencies закрепляются lockfile и не попадают в ZIP.
 недоверенными.
 
 В версии 1.0 учреждён только `HostingUkraineApiProvider` с методом
-`hosting/log/web/nginx` и read-only определением site ID через `get_id`. Точная схема запроса и ответа сверяется с актуальной
+`hosting/log/web/nginx` и read-only определением site ID через `get_services`.
+Discovery передаёт только Bearer token и `type=host`, получает доступный token
+список хостинговых услуг, сопоставляет введённый домен локально с `host` и
+использует positive `id` выбранной услуги как `host_id`. `account_id`,
+`virtual_domain_id`, panel user ID и WordPress blog ID не подставляются вместо
+`host_id`. Точная схема запроса и ответа сверяется с актуальной
 аутентифицированной документацией API перед реализацией и релизом. Provider
 подменяется mock HTTP client в тестах.
 

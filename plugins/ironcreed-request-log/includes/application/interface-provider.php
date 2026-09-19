@@ -12,7 +12,7 @@ interface Provider {
 	/**
 	 * Fetch today's events as a lazy iterable.
 	 *
-	 * @param int    $host_id Hosting account identifier.
+	 * @param int    $host_id Positive hosting site/virtual-host identifier.
 	 * @param string $token   Bearer credential.
 	 * @return iterable<int,array<string,mixed>>
 	 */

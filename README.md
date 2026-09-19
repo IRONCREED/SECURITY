@@ -6,24 +6,27 @@ independently testable, and independently releasable package.
 
 ## Status
 
-The repository is in pre-development. It establishes governance, licensing,
-the cross-plugin navigation protocol, the WordPress.org release gate, and the
-implementation brief for the first plugin. No production package is released.
+The repository is public and contains the maintained source, tests, build
+tooling, governance, and release documentation for IRONCREED WordPress
+utilities.
 
-The repository must be public before the first WordPress.org submission so
-reviewers and users can inspect the maintained source and build process.
+IRONCREED Request Log 1.0.0 has been submitted to the WordPress.org Plugin
+Directory and is awaiting manual review. The production package has passed the
+automated WordPress.org submission scan and the project's available local and
+CI quality gates. Final directory publication remains pending WordPress.org
+approval.
 
-## Planned plugins
+## Plugins
 
 | Plugin | Slug | Theme | Status |
 | --- | --- | --- | --- |
-| IRONCREED Request Log | `ironcreed-request-log` | `security` | Specification |
+| IRONCREED Request Log | `ironcreed-request-log` | `security` | 1.0.0 — awaiting WordPress.org review |
 
-IRONCREED Request Log will show concrete request records and URIs in WordPress
+IRONCREED Request Log shows concrete request records and URIs in WordPress
 administration. Its first release includes a disabled-by-default WordPress
-Runtime Source and an optional Hosting Ukraine API provider for authoritative
-nginx access logs. The interface keeps the sources separate and states the
-visibility boundary of each one.
+Runtime Source and an optional read-only Hosting Ukraine API provider for nginx
+access logs. The interface keeps the sources separate and states the visibility
+boundary of each one.
 
 ## Repository map
 

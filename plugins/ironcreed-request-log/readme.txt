@@ -17,6 +17,8 @@ IRONCREED Request Log offers two opt-in, clearly separated sources.
 * **WordPress Runtime** records requests that load WordPress. It cannot see traffic completed by a CDN, WAF, web server, full-page cache, static handler, or any layer before WordPress.
 * **Hosting Ukraine API** retrieves today's nginx access-log archive manually or on an explicitly enabled schedule. It shows only records and coverage returned by the provider API.
 
+This is intentionally a visibility-boundary diagnostic rather than a generic arbitrary-file log viewer. It keeps application-observed WordPress requests separate from provider-supplied nginx records, so operators can see what each layer can and cannot observe without a local-file reader, telemetry, or a general analytics stack.
+
 Both sources start disabled. Records use bounded retention and count limits. Sensitive query values are redacted. Runtime records omit IP addresses, User-Agent, Referer, bodies, cookies, and authorization data. Hosting Ukraine records may include IP addresses, URI identifiers, User-Agent, and Referer and must be covered by the site's privacy notice and lawful basis.
 
 The plugin has no telemetry, advertising, export, live tail, public endpoint, alternate updater, or local-file reader. It never sends fetched logs to IRONCREED or another service.
@@ -29,7 +31,7 @@ Development source, tests, build tooling, and release documentation are maintain
 2. Open Tools > Request Log. Logging remains disabled until an administrator enables WordPress Runtime.
 3. Open Settings, choose Hosting Ukraine API, and enter a token. Resolve the hosting site ID by domain or enter it manually. Test uses the form values; saving a manual ID makes no network request.
 4. Use Fetch today's logs, or separately allow Scheduled imports and choose an interval. Refresh saved records only reloads the local table.
-5. Open Help or a question-mark link for instructions. Ukrainian is bundled and follows the WordPress user/site locale.
+5. Open Help or a question-mark link for instructions. The plugin is internationalized; WordPress.org directory installs receive translations through WordPress.org language packs when available.
 
 On Multisite, each site stores and displays its own records. Uninstall removes records, settings, credentials, all scheduled jobs, and capabilities from every site. Deactivation preserves data and credentials but cancels scheduled jobs until reactivation.
 
@@ -44,6 +46,10 @@ Review the [API method](https://adm.tools/user/api/#/tab-sandbox/hosting/log/web
 = Is WordPress Runtime a complete server access log? =
 
 No. It records requests only after WordPress loads.
+
+= How is this different from a generic log viewer? =
+
+It does not open arbitrary server files or present one source as complete. It records only requests WordPress actually sees and can optionally retrieve the hosting provider's current-day nginx archive through a read-only API. The two sources remain separate, with explicit visibility and privacy boundaries.
 
 = Does Hosting Ukraine change my server? =
 

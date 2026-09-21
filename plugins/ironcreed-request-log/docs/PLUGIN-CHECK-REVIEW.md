@@ -88,3 +88,22 @@ canonical build and postbuild phases did not run.
 The disposable Plugin Check installation is separate diagnostic evidence, not
 a substitute for those WARDEN gates or the remaining manual review. The ZIP
 provided for reproduction is a test package, not a release candidate.
+
+## WordPress.org pre-review follow-up — 2026-09-21
+
+The first WordPress.org automated pre-review asked the directory package not to
+bundle plugin-local PO/MO translations and asked for the now-unnecessary
+`load_plugin_textdomain()` call to be removed. That request supersedes the
+sideload-specific distribution decision documented above for WordPress.org
+packages.
+
+Development POT/PO/MO catalogs remain in the public source tree for parity,
+placeholder and gettext QA, but `tools/build.sh` excludes them from the
+production ZIP. Directory installs rely on WordPress.org language packs. The
+runtime no longer registers a custom translation path.
+
+The pre-review also classified the submission in the crowded log-viewer
+category. The public `readme.txt` now states the intended distinction: this is a
+visibility-boundary diagnostic that keeps WordPress-observed requests separate
+from an optional read-only hosting-provider nginx source; it is not an
+arbitrary-file viewer, telemetry service, live tail or general analytics stack.

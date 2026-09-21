@@ -52,7 +52,6 @@ final class Plugin {
 
 		( new Suite_Menu( array( $admin, 'render_log' ) ) )->register();
 		$admin->register();
-		add_action( 'init', array( $this, 'load_translations' ) );
 		add_action( 'init', array( Provider_Import::class, 'restore_schedule' ) );
 		add_action( Provider_Import::HOOK, array( new Provider_Import( $wpdb ), 'scheduled' ) );
 
@@ -67,19 +66,6 @@ final class Plugin {
 			$this->started = hrtime( true ) / 1e9;
 			add_action( 'shutdown', array( $this, 'observe' ), PHP_INT_MAX );
 		}
-	}
-
-	/**
-	 * Register bundled translations after WordPress locale initialization.
-	 *
-	 * Sideloaded packages need this path on supported WordPress versions; the
-	 * automatic WordPress.org language-pack delivery does not apply to them.
-	 * Keep this callback on init, as recommended by WordPress Core.
-	 *
-	 * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/
-	 */
-	public function load_translations(): void {
-		load_plugin_textdomain( 'ironcreed-request-log', false, dirname( plugin_basename( IRONCREED_REQUEST_LOG_FILE ) ) . '/languages' );
 	}
 
 	/**

@@ -38,7 +38,8 @@ bash tools/build.sh "$PWD/../../build"
 
 On Windows, use Git Bash with `zip` installed, or WSL. The output is
 `build/ironcreed-request-log-1.0.0.zip` at the repository root. The builder copies
-only the distribution files, including the bundled Ukrainian translation.
+only the runtime distribution files. Development POT/PO/MO catalogs remain
+source-only; WordPress.org production installs use directory language packs.
 `composer build -- "$PWD/../../build"` runs the same builder. A standalone build is suitable for
 testing; it does not certify a release candidate. Run `composer check` for the
 complete WARDEN release gate and retain its actual pending/unavailable results.
@@ -53,14 +54,15 @@ the plugin's records, credentials and settings.
 Run Plugin Check against the installed package, with all its files included.
 Do not hide findings with directory exclusions. See
 `docs/PLUGIN-CHECK-REVIEW.md` for the reviewed packaging findings and the
-WordPress Core rationale for retaining `load_plugin_textdomain()` in this
-sideloaded plugin.
+WordPress.org pre-review follow-up. The production package does not call
+`load_plugin_textdomain()` and does not ship plugin-local translation files.
 
 ## UI and localization maintenance
 
 The 2026-09-16 update adds four tabs, domain lookup and opt-in scheduled imports.
-Keep English PHP strings, contextual FAQ, POT, Ukrainian PO/MO and public
-disclosure synchronized in every change. Edit the PO, run
+Keep English PHP strings, contextual FAQ, development POT/PO/MO and public
+disclosure synchronized in every change. These catalogs are source QA assets,
+not WordPress.org distribution files. Edit the PO, run
 python3 tools/translations.py --write, then python3 tools/translations.py.
 The checker rejects missing/obsolete/fuzzy strings and changed placeholders;
 it also loads the compiled MO through a standard gettext reader. Source language

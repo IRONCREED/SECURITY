@@ -446,6 +446,14 @@
       "path": "history/postbuild/admin-package-v1.php",
       "phase": "postbuild",
       "sha256": "d8704020bdbd2cf2d378cf73379da5f4d5f52744e509975a0d6d3f624a02a4d6",
+      "status": "superseded",
+      "supersededBy": "ics-warden-admin-package-002"
+    },
+    {
+      "id": "ics-warden-admin-package-002",
+      "path": "history/postbuild/admin-package-v2.php",
+      "phase": "postbuild",
+      "sha256": "d69448a3b923bb64699186dc782dd705974104f71ddf93a96af63acb6b05af28",
       "status": "active"
     },
     {
